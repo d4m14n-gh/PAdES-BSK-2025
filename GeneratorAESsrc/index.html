@@ -3,15 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Electron App</title>
-    <!-- Link to the external CSS file -->
+    <title>Key Generator</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Welcome to My Electron App!</h1>
-    <p>This is a basic HTML page for Electron with external CSS.</p>
-    <button onclick="sayHello()">Click Me</button>
-
+    <h1>Select a drive</h1>
+    <div>
+        <label for="drive-select">Available Drives:</label>
+        <select id="drive-select">
+            <option value="" disabled selected>Select a drive...</option>
+        </select>
+        <button id="confirm-button">Confirm</button>
+    </div>
+    <p id="selected-drive"></p>
     <script src="render.js"></script>
 </body>
 </html>
