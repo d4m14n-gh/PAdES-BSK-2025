@@ -1,4 +1,8 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron')
+// const usbDetect = require('usb-detection');
+// const fs = require('fs');
+// const path = require('path');
+// const { exec } = require('child_process');
 
 let win
 
@@ -36,3 +40,24 @@ ipcMain.handle('dialog:openFile', async () => {
   });
   return result.filePaths;
 });
+
+function startUsbDetection() {
+  usbDetect.startMonitoring(); 
+
+  usbDetect.on('add', device => {
+    console.log('Device added:', device);
+    if (device.deviceName.includes("USB")) { 
+      console.log(device);
+      // const mountPath = getMountPathForDevice(device);
+      // if (mountPath) {
+      //   // Sprawdzamy pliki PDF w katalogu pendrive
+      //   findPdfFilesOnDrive(mountPath);
+      // }
+    }
+  });
+
+  // Nasłuchuj na zdarzenie odłączenia urządzenia
+  usbDetect.on('remove', device => {
+    console.log('Device removed:', device);
+  });
+}
