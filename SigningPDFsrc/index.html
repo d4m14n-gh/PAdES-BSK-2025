@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Electron App</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <script defer type="module" src="node_modules/pdfjs-dist/build/pdf.min.mjs"></script>
+  <script defer type="module" src="node_modules/pdfjs-dist/build/pdf.worker.min.mjs"></script>
+  <script type="module" defer src="script.js"></script>
+</head>
+<body>
+  <div class="background"></div>
+  <header>
+    <h1>PAdES-BSK-2025</h1>
+  </header>
+  <section>
+    <canvas id="pdf-canvas"></canvas>
+    <p id="file-path"></p>
+  </section>
+  <section>
+    <form action="">
+      <input type="button" id="choose-file-btn" value="Choose file"/>
+    </form>
+  </section>
+  <fieldset>
+    <legend>Enter your pin!</legend>
+    <form id="pin-form">
+      <input placeholder="xxxx" style="text-align: center;" type="password" id="pin" name="pin" minlength="4" maxlength="4" required>
+      <br>
+      <br>
+      <input style="width: fit-content; padding: 10px 40px;" type="submit" value="Enter"/>
+    </form>
+    
+    <script>
+        const { ipcRenderer } = require('electron');
+        document.getElementById('pin-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const pin = document.getElementById('pin');
+        const pinv = pin.value;
+
+        alert(`PIN: ${pinv}`)
+        if (pinv === "1234") { // Załóżmy, że poprawny PIN to 1234
+          alert("PIN poprawny!");
+        } else {
+          console.log()
+          alert("Niepoprawny PIN.");
+        }
+      });
+    </script>
+    </fieldset>
+</body>
+</html>
