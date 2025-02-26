@@ -7,15 +7,19 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Select a drive</h1>
-    <div>
-        <label for="drive-select">Available Drives:</label>
-        <select id="drive-select">
-            <option value="" disabled selected>Select a drive...</option>
-        </select>
-        <button id="confirm-button">Confirm</button>
-    </div>
-    <p id="selected-drive"></p>
+    <header>
+        <h1>Select a drive</h1>
+    </header>
+    <main>
+        <div>
+            <label for="drive-select">Available Drives:</label>
+            <select id="drive-select">
+                <option value="" disabled selected>Select a drive...</option>
+            </select>
+            <input type ="button" id="generate-button" value="Confirm">
+        </div>
+        <p id="status"></p>
+    </main>
     <script src="render.js"></script>
 </body>
 </html>

@@ -6,10 +6,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron ."
-    },
+  },
   "author": "Maciej Raciniewski",
   "license": "ISC",
   "devDependencies": {
     "electron": "^34.2.0"
+  },
+  "dependencies": {
+    "node-forge": "^1.3.1"
   }
 }

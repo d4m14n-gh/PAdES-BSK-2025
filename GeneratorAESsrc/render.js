@@ -8,13 +8,25 @@ window.electronAPI.getDrives().then((drives) => {
     });
 });
 
-document.getElementById('confirm-button').addEventListener('click', () => {
+document.getElementById('generate-button').addEventListener('click', () => {
     const driveSelect = document.getElementById('drive-select');
     const selectedDrive = driveSelect.value;
+    const status = document.getElementById('status');
 
-    if (selectedDrive) {
-        document.getElementById('selected-drive').textContent = `You selected: ${selectedDrive}`;
-    } else {
-        document.getElementById('selected-drive').textContent = 'Please select a drive!';
+    if (!selectedDrive) {
+        status.textContent = 'Please select a drive!';
+        return;
     }
+
+    status.textContent = 'Generating keys...';
+
+    // Generowanie kluczy RSA na wybranym dysku
+    window.electronAPI.generateKeys(selectedDrive).then((paths) => {
+        status.textContent = `Keys generated successfully!
+        Public Key: ${paths.publicKeyPath}
+        Private Key: ${paths.privateKeyPath}`;
+    }).catch((error) => {
+        status.textContent = `Error generating keys: ${error.message}`;
+    });
 });
+
