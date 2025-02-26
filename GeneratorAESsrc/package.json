@@ -4,8 +4,12 @@
   "description": "app generating a pair of keys using RSA algorythm public and private. Private one is encrypted usiond AES algorythm",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+    },
   "author": "Maciej Raciniewski",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^34.2.0"
+  }
 }
