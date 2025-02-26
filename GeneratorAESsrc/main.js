@@ -3,6 +3,7 @@ const {exec} = require('child_process');
 const path = require('path');
 const fs = require('fs');
 const forge = require('node-forge');
+const crypto =require('crypto');
 
 const createWindow = ()=>{
     const win = new BrowserWindow({
@@ -38,16 +39,18 @@ function getAvailableDrives() {
 function generateRSAKeys(diskPath) {
     return new Promise((resolve, reject) => {
         try {
-            // Generowanie kluczy RSA
             const keypair = forge.pki.rsa.generateKeyPair({ bits: 4096 });
             const publicKeyPem = forge.pki.publicKeyToPem(keypair.publicKey);
             const privateKeyPem = forge.pki.privateKeyToPem(keypair.privateKey);
+            
+            const aesKey = hashPIN(userPIN);
+
+            const { encrypted, iv } = encryptWithAES(privateKeyPem, aesKey);
 
             // Ścieżki do zapisania kluczy
             const publicKeyPath = path.join(diskPath, 'rsa_public_key.pem');
             const privateKeyPath = path.join(diskPath, 'rsa_private_key.pem');
 
-            // Zapis kluczy na dysku
             fs.writeFileSync(publicKeyPath, publicKeyPem);
             fs.writeFileSync(privateKeyPath, privateKeyPem);
 
@@ -56,6 +59,17 @@ function generateRSAKeys(diskPath) {
             reject(error);
         }
     });
+}
+
+function hashPIN(pin) {
+    return crypto.createHash('sha256').update(pin).digest();
+}
+
+function encryptWithAES(data, key) {
+    const iv = crypto.randomBytes(16); // Generate a random IV (16 bytes)
+    const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
+    const encrypted = Buffer.concat([cipher.update(data, 'utf8'), cipher.final()]);
+    return { encrypted, iv }; // Return encrypted data and IV
 }
 
 ipcMain.handle('get-drives', async () => {
