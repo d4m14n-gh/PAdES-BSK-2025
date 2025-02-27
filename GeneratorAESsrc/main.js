@@ -36,7 +36,7 @@ function getAvailableDrives() {
     });
 }
 
-function generateRSAKeys(diskPath) {
+function generateRSAKeys(diskPath, userPIN) {
     return new Promise((resolve, reject) => {
         try {
             const keypair = forge.pki.rsa.generateKeyPair({ bits: 4096 });
@@ -45,14 +45,14 @@ function generateRSAKeys(diskPath) {
             
             const aesKey = hashPIN(userPIN);
 
-            const { encrypted, iv } = encryptWithAES(privateKeyPem, aesKey);
+            const { encrypted} = encryptWithAES(privateKeyPem, aesKey);
 
             // Ścieżki do zapisania kluczy
             const publicKeyPath = path.join(diskPath, 'rsa_public_key.pem');
             const privateKeyPath = path.join(diskPath, 'rsa_private_key.pem');
 
             fs.writeFileSync(publicKeyPath, publicKeyPem);
-            fs.writeFileSync(privateKeyPath, privateKeyPem);
+            fs.writeFileSync(privateKeyPath, encrypted);
 
             resolve({ publicKeyPath, privateKeyPath });
         } catch (error) {
@@ -62,14 +62,16 @@ function generateRSAKeys(diskPath) {
 }
 
 function hashPIN(pin) {
+    if (typeof pin !== 'string') {
+        throw new TypeError('PIN must be a string');
+    }
     return crypto.createHash('sha256').update(pin).digest();
 }
 
 function encryptWithAES(data, key) {
-    const iv = crypto.randomBytes(16); // Generate a random IV (16 bytes)
-    const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
+    const cipher = crypto.createCipheriv('aes-256-cbc', key, null);
     const encrypted = Buffer.concat([cipher.update(data, 'utf8'), cipher.final()]);
-    return { encrypted, iv }; // Return encrypted data and IV
+    return encrypted ; // Return encrypted data and IV
 }
 
 ipcMain.handle('get-drives', async () => {
@@ -77,8 +79,8 @@ ipcMain.handle('get-drives', async () => {
     return drives;
 });
 
-ipcMain.handle('generate-keys', async (_, diskPath) => {
-    return await generateRSAKeys(diskPath);
+ipcMain.handle('generate-keys', async (_, diskPath, userPIN) => {
+    return await generateRSAKeys(diskPath, userPIN);
 });
 
 app.on('window-all-closed', () => {

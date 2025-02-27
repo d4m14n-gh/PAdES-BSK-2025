@@ -18,6 +18,12 @@
             </select>
             <input type ="button" id="generate-button" value="Confirm">
         </div>
+        <form id="pin-form" style="display: none; margin-top: 20px;">
+            <input placeholder="xxxx" style="text-align: center;" type="password" id="pin" name="pin" minlength="4" maxlength="4" required>
+            <br>
+            <br>
+            <input style="width: fit-content; padding: 10px 40px;" type="submit" value="Enter"/>
+        </form>
         <p id="status"></p>
     </main>
     <script src="render.js"></script>
