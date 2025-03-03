@@ -39,19 +39,23 @@ function getAvailableDrives() {
 function generateRSAKeys(diskPath, userPIN) {
     return new Promise((resolve, reject) => {
         try {
+            console.log('generateRSAKeys called with:', { diskPath, userPIN });
             const keypair = forge.pki.rsa.generateKeyPair({ bits: 4096 });
             const publicKeyPem = forge.pki.publicKeyToPem(keypair.publicKey);
             const privateKeyPem = forge.pki.privateKeyToPem(keypair.privateKey);
             
             const aesKey = hashPIN(userPIN);
 
-            const { encrypted} = encryptWithAES(privateKeyPem, aesKey);
+            const encrypted = encryptWithAES(privateKeyPem, aesKey);
 
-            // Ścieżki do zapisania kluczy
             const publicKeyPath = path.join(diskPath, 'rsa_public_key.pem');
             const privateKeyPath = path.join(diskPath, 'rsa_private_key.pem');
 
             fs.writeFileSync(publicKeyPath, publicKeyPem);
+            console.log("Type of encrypted", typeof data)
+            if (!Buffer.isBuffer(encrypted)) {
+                throw new Error('Encryption failed. "encrypted" is not a Buffer.');
+            }
             fs.writeFileSync(privateKeyPath, encrypted);
 
             resolve({ publicKeyPath, privateKeyPath });
@@ -62,17 +66,41 @@ function generateRSAKeys(diskPath, userPIN) {
 }
 
 function hashPIN(pin) {
-    if (typeof pin !== 'string') {
-        throw new TypeError('PIN must be a string');
+    console.log('hashPIN called with:', pin);
+    if (!pin || typeof pin !== 'string') {
+        throw new Error('Invalid PIN. Expected a non-empty string.');
     }
-    return crypto.createHash('sha256').update(pin).digest();
+    return crypto.createHash('sha256').update(pin, 'utf8').digest();
+}
+// function encryptWithAES(data, key) {
+//     const cipher = crypto.createCipheriv('aes-256-cbc', key, null);
+//     cipher.setAutoPadding(true);
+//     const encrypted = Buffer.concat([cipher.update(data, 'utf8'), cipher.final()]);
+//     return encrypted ; 
+// }
+function encryptWithAES(data, aesKey) {
+    console.log('Type of data:', typeof data);
+    console.log('Type of aesKey:', typeof aesKey);
+    if (!aesKey || aesKey.length !== 32) { 
+        throw new Error('Invalid AES key. Expected a 256-bit key.');
+    }
+    const cipher = crypto.createCipheriv('aes-256-ecb', aesKey, null); 
+    cipher.setAutoPadding(true);
+    try {
+        const encrypted = Buffer.concat([cipher.update(data, 'utf8'), cipher.final()]);
+        console.log('Type of encrypted:', typeof encrypted);
+        if (!Buffer.isBuffer(encrypted)) {
+            throw new Error('Encryption failed. "encrypted" is not a Buffer.');
+        }
+        return encrypted;
+    } catch (error) {
+        console.error('Encryption error:', error);
+        throw error;
+    }
+    // const encrypted = Buffer.concat([cipher.update(data, 'utf8'), cipher.final()]);
+    // return encrypted;
 }
 
-function encryptWithAES(data, key) {
-    const cipher = crypto.createCipheriv('aes-256-cbc', key, null);
-    const encrypted = Buffer.concat([cipher.update(data, 'utf8'), cipher.final()]);
-    return encrypted ; // Return encrypted data and IV
-}
 
 ipcMain.handle('get-drives', async () => {
     const drives = await getAvailableDrives();
