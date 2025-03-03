@@ -14,8 +14,11 @@
     "electron": "^34.2.0"
   },
   "dependencies": {
+    "@signpdf/signer-p12": "^3.2.4",
     "@signpdf/signpdf": "^3.2.4",
     "drivelist": "^12.0.2",
+    "node-signpdf": "^3.0.0",
+    "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^4.10.38",
     "usb": "^2.15.0",
     "usb-detection": "^4.14.2"

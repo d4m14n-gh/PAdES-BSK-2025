@@ -1,16 +1,22 @@
 :root{
-    --bg-color: rgb(57, 58, 59, 0.5);
-    --blur: 5px;
+    --bg-color: rgb(222, 224, 225, 0.05);
+    --bg-color: rgb(33, 40, 48, 0.5);
+    --bg-color: rgba(49, 51, 56, 0.5);
+    
+    --blur: 17px;
     --borders: none;
     --borders: 1px solid rgba(255, 255, 255, 0.05);
     --bg-answer-opacity: 0.175;
     
-    --primary-color-light: rgb(159, 182, 191);
-    --primary-color-light-raw: 107, 140, 156;
+    
+    --primary-color-light-raw: 42, 118, 144;
+    --primary-color-light-raw: 107, 140, 176;
+    --primary-color-light-raw: 22, 22, 35;
     
     
     --primary-color-light: rgb(var(--primary-color-light-raw));
     --primary-color: hsl(from var(--primary-color-light) h s calc(l - 20));
+    --primary-color-light: rgb(255, 255, 255, 0.1);
 }
 form {
     text-align: center;
@@ -18,9 +24,14 @@ form {
 body {
     background: radial-gradient(ellipse farthest-corner at center, #00000025, #16181925);
     color: rgb(220, 215, 186);
+    color: rgb(234, 238, 237);
+    background-color: #161819;
+    background-color: #161819;
     background-color: #1e1e27f1;
-    background-color: #161819;
-    background-color: #161819;
+    background-color: rgb(233, 233, 233);
+    background-color: #212830;
+    background-color: var(--bg-color);
+    background-color: #232428;
     /* background-color: rgb(96, 87, 58);
     /* font-family: "Helvetica Neue", Arial, sans-serif; */
     /* font-family: 'JetBrains Mono';
@@ -34,14 +45,14 @@ body {
 
 .background {
     position: fixed;
-    background-image: url("assets/bg.png");
+    background-image: url("assets/bg3.png");
     width: 100%;
     height: 100%;
-    opacity: 25%;
+    opacity: 10%;
     top: 0;
     left: 0;
     background-position: center;
-    /* background-size: cover; */
+    background-size: cover;
     z-index:-999;
 }
 .video-background {
@@ -58,11 +69,11 @@ body {
 
 header, footer {
     padding-left: 20px;
-    background: linear-gradient(to left, rgba(var(--primary-color-light-raw), 0.25), var(--bg-color));
-    backdrop-filter: blur(var(--blur));
+    /* background: linear-gradient(to left, rgba(var(--primary-color-light-raw), 0.8), var(--bg-color)); */
+    /* backdrop-filter: blur(var(--blur)); */
     user-select: none;
-    border-bottom: var(--borders);
-    box-shadow: 0 4px 6px rgba(255, 255, 255, 0.025);
+    /* border-bottom: var(--borders); */
+    /* box-shadow: 0 4px 6px rgba(255, 255, 255, 0.025); */
 }
 
 h1{
@@ -84,14 +95,19 @@ p {
 
 
 section, fieldset {
-    margin: 50px 15px;
+    margin: 50px 25px;
     padding: 10px 20px;
-    border: none;
     border-radius: 20px;
     background-color: var(--bg-color);
     backdrop-filter: blur(var(--blur));
     /* border: var(--borders); */
-    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.125);
+    /* box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.125); */
+}
+fieldset {
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: transparent;
+    backdrop-filter: unset;
 }
 section {
     margin: 15px;
@@ -103,6 +119,7 @@ form {
 input, select {
     margin: 10px;
     background-color: var(--bg-color);
+    background-color: #2b2d31;
     color: silver;
     border: 1px solid rgba(255, 255, 255, 0.1);
     padding: 10px 15px;
@@ -118,9 +135,10 @@ input:focus, select:focus {
 }
 
 input[type="submit"], input[type="button"] {
-    background: linear-gradient(to top, var(--primary-color), transparent 40%);
-    background: linear-gradient(to left, rgba(var(--primary-color-light-raw), 0.25), var(--bg-color));
+    /* background: linear-gradient(to top, var(--primary-color), transparent 40%); */
+    /* background: linear-gradient(to left, rgba(var(--primary-color-light-raw), 0.25), var(--bg-color)); */
     background-color: var(--bg-color);
+    background-color: #2b2d31;
     outline: none;
 }
 input[type="submit"]:hover, input[type="button"]:hover {
@@ -236,9 +254,9 @@ br {
     width: 100%;
     overflow: auto;
     position: relative;
-  }
+}
 canvas {
-    height: 300px;
+    width: 100%;
     display: block;
-    margin: 0 auto;
+    margin: 20px auto;
 }
