@@ -10,9 +10,10 @@
   "author": "Maciej Raciniewski",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^34.2.0"
+    "electron": "^34.5.0"
   },
   "dependencies": {
+    "key-generator": "file:",
     "node-forge": "^1.3.1"
   }
 }

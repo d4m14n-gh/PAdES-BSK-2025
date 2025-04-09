@@ -27,9 +27,9 @@ function getAvailableDrives() {
                 reject(error);
             } else {
                 const drives = stdout
-                    .split('\n') // Podziel wynik na linie
-                    .filter((line) => line.includes(':')) // Filtruj linie zawierające ":"
-                    .map((drive) => drive.trim()); // Usuń spacje
+                    .split('\n')
+                    .filter((line) => line.includes(':'))
+                    .map((drive) => drive.trim());
                 resolve(drives);
             }
         });
