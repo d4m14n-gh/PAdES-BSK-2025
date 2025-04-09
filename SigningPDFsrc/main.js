@@ -1,11 +1,6 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron')
-// const usbDetect = require('usb-detection');
-// const fs = require('fs');
-// const path = require('path');
-// const { exec } = require('child_process');
 
 let win
-
 function createWindow() {
   win = new BrowserWindow({
     width: 1920,
@@ -22,6 +17,7 @@ function createWindow() {
     win = null
   });
 }
+
 
 app.whenReady().then(createWindow);
 
