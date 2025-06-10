@@ -173,8 +173,6 @@ function encryptWithAES(data, aesKey) {
         console.error('Encryption error:', error);
         throw error;
     }
-    // const encrypted = Buffer.concat([cipher.update(data, 'utf8'), cipher.final()]);
-    // return encrypted;
 }
 
 
