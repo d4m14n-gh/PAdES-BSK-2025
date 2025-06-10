@@ -20,6 +20,18 @@ app.whenReady().then(()=>{
     createWindow();
 });
 
+ /**
+ * Retrieves a list of available logical drives on the system.
+ *
+ * This function executes a shell command to query logical disks using `wmic`.
+ * The results are processed to extract drive names (e.g., "C:", "D:").
+ *
+ * @function
+ * @returns {Promise<string[]>} A promise that resolves to an array of drive names.
+ *                              Each drive is represented as a string (e.g., "C:").
+ * @throws {Error} If there is an issue executing the shell command.
+ *
+ */
 function getAvailableDrives() {
     return new Promise((resolve, reject) => {
         exec('wmic logicaldisk get name', (error, stdout) => {
@@ -36,6 +48,36 @@ function getAvailableDrives() {
     });
 }
 
+/**
+ * Generates an RSA key pair, encrypts the private key, and saves the keys to disk.
+ *
+ * This function creates a 4096-bit RSA key pair, encrypts the private key using a user-provided PIN,
+ * and saves both the public and encrypted private keys as files on the specified disk path.
+ *
+ * @function
+ * @param {string} diskPath - The directory path where the RSA key files will be saved.
+ *                            Must be a valid and writable directory path.
+ * @param {string} userPIN - A PIN provided by the user to encrypt the private key.
+ *                           Must be a non-empty string.
+ * @returns {Promise<Object>} A promise that resolves to an object containing:
+ * - `publicKeyPath` (string): The file path of the saved public key.
+ * - `privateKeyPath` (string): The file path of the saved encrypted private key.
+ * @throws {Error} If key generation, encryption, or file writing fails.
+ *
+ * @example
+ * const diskPath = '/path/to/keys';
+ * const userPIN = '1234';
+ *
+ * generateRSAKeys(diskPath, userPIN)
+ *     .then(({ publicKeyPath, privateKeyPath }) => {
+ *         console.log('Keys generated successfully:');
+ *         console.log('Public Key:', publicKeyPath);
+ *         console.log('Encrypted Private Key:', privateKeyPath);
+ *     })
+ *     .catch((error) => {
+ *         console.error('Failed to generate keys:', error.message);
+ *     });
+ */
 function generateRSAKeys(diskPath, userPIN) {
     return new Promise((resolve, reject) => {
         try {
@@ -65,6 +107,17 @@ function generateRSAKeys(diskPath, userPIN) {
     });
 }
 
+/**
+ * Hashes a given PIN using the SHA-256 algorithm.
+ *
+ * This function takes a string PIN as input, validates it, and returns a hashed value
+ * using the `sha256` hashing algorithm. The hashed value is a Buffer object.
+ *
+ * @function
+ * @param {string} pin - The PIN to be hashed. It must be a non-empty string.
+ * @returns {Buffer} The hashed value of the PIN as a Buffer object.
+ * @throws {Error} If the input PIN is invalid (not a string or empty).
+ */
 function hashPIN(pin) {
     console.log('hashPIN called with:', pin);
     if (!pin || typeof pin !== 'string') {
@@ -72,12 +125,35 @@ function hashPIN(pin) {
     }
     return crypto.createHash('sha256').update(pin, 'utf8').digest();
 }
-// function encryptWithAES(data, key) {
-//     const cipher = crypto.createCipheriv('aes-256-cbc', key, null);
-//     cipher.setAutoPadding(true);
-//     const encrypted = Buffer.concat([cipher.update(data, 'utf8'), cipher.final()]);
-//     return encrypted ; 
-// }
+/**
+ * Encrypts data using AES-256-ECB encryption.
+ *
+ * This function encrypts a given string or buffer using a 256-bit AES key
+ * and the ECB (Electronic Codebook) mode of operation. The encrypted result
+ * is returned as a Buffer.
+ *
+ * @function
+ * @param {string|Buffer} data - The data to be encrypted. Can be a UTF-8 string or a Buffer.
+ * @param {Buffer} aesKey - A 256-bit AES key (32 bytes). Must be a valid Buffer of exactly 32 bytes.
+ * @returns {Buffer} The encrypted data as a Buffer.
+ * @throws {Error} If the AES key is invalid (not a Buffer of 32 bytes) or encryption fails.
+ *
+ * @example
+ * const crypto = require('crypto');
+ *
+ * // Example 256-bit key (32 bytes)
+ * const aesKey = crypto.randomBytes(32);
+ *
+ * // Data to encrypt
+ * const data = "This is a secret message.";
+ *
+ * try {
+ *     const encryptedData = encryptWithAES(data, aesKey);
+ *     console.log('Encrypted data (hex):', encryptedData.toString('hex'));
+ * } catch (error) {
+ *     console.error('Encryption failed:', error.message);
+ * }
+ */
 function encryptWithAES(data, aesKey) {
     console.log('Type of data:', typeof data);
     console.log('Type of aesKey:', typeof aesKey);
