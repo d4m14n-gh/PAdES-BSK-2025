@@ -23,26 +23,30 @@ async function checkForUSBDevices() {
 
   let pdhtml = "";
   for(let i=0;i<usbDrives.length;i++){
-    pdhtml+="<option>";
-    pdhtml+=usbDrives[i].mountpoints[0].path;
+    const mount = usbDrives[i].mountpoints[0].path;
+    pdhtml+=`<option value='${mount}'>`;
+    pdhtml+=mount;
     pdhtml+="</option>";
   }
+
   document.getElementById("pendrives").innerHTML = pdhtml; 
   
   if (usbDrives.length > 0) {
+    const mount = document.getElementById("pendrives").value;
     document.getElementById("pendrives").removeAttribute("disabled");
-    console.log("Found USB drive:", usbDrives[0].mountpoints[0].path);
+    console.log("Found USB drive:", mount);
 
     if ( document.getElementById("private-key-path").value === "" ) {
-      const privateKeyPath = usbDrives[0].mountpoints[0].path + ".prvt.pem";
+      const privateKeyPath = mount + ".prvt.pem";
       document.getElementById("private-key-path").value = privateKeyPath;
     }
     if ( document.getElementById("public-key-path").value === "" ) {
-      const publicKeyPath = usbDrives[0].mountpoints[0].path + ".pub.pem";
+      const publicKeyPath = mount + ".pub.pem";
       document.getElementById("public-key-path").value = publicKeyPath;
     }
 
   } else {
+    document.getElementById("pendrives").setAttribute("disabled");
     console.log("No USB drives found.");
     return [];
   }

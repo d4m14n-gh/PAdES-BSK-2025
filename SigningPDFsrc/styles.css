@@ -69,7 +69,7 @@ fieldset {
 }
 
 input, select {
-    margin: 5px;
+    margin: 10px;
     background-color: var(--bg-color);
     background-color: #2b2d31;
     color: silver;
