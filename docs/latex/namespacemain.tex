@@ -1,0 +1,278 @@
+\doxysection{main Namespace Reference}
+\hypertarget{namespacemain}{}\label{namespacemain}\index{main@{main}}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+None \mbox{\hyperlink{namespacemain_abe02849c32fe9935c7b98f8e12b82252}{create\+\_\+pdf\+\_\+placeholder}} (str input\+\_\+pdf\+\_\+path, str output\+\_\+pdf\+\_\+path, int signature\+\_\+length)
+\begin{DoxyCompactList}\small\item\em Adds a signature placeholder to a PDF file. \end{DoxyCompactList}\item 
+None \mbox{\hyperlink{namespacemain_a3e0e475d5402fdf2b6d282a5b000223d}{replace\+\_\+bytes\+\_\+at\+\_\+offset}} (str file\+\_\+path, int offset, bytes new\+\_\+bytes, str output\+\_\+path=None)
+\begin{DoxyCompactList}\small\item\em Replaces a sequence of bytes at a specified offset in a binary file. \end{DoxyCompactList}\item 
+Optional\mbox{[}int\mbox{]} \mbox{\hyperlink{namespacemain_a376039fb3e1480f17ceb80fc50afb8cb}{find\+\_\+signature}} (str pdf\+\_\+path)
+\begin{DoxyCompactList}\small\item\em Finds the position of a signature placeholder in a PDF file. \end{DoxyCompactList}\item 
+str \mbox{\hyperlink{namespacemain_ae2ee6cba198fef30b7a52546e29af47b}{get\+\_\+signature}} (str pdf\+\_\+path, int position, int signature\+\_\+length)
+\begin{DoxyCompactList}\small\item\em Extracts the signature data from a PDF file at a specified position. \end{DoxyCompactList}\item 
+str \mbox{\hyperlink{namespacemain_a6bd9b9b8136da81e6ef7ba918a61e7a5}{calculate\+\_\+sha256}} (str file\+\_\+path, int start\+\_\+position, int length\+\_\+of\+\_\+section)
+\begin{DoxyCompactList}\small\item\em Calculates the SHA-\/256 hash of a file excluding a specific section. \end{DoxyCompactList}\item 
+str \mbox{\hyperlink{namespacemain_adc4a58e52c383b311607983ccbda971f}{sign\+\_\+hash\+\_\+with\+\_\+private\+\_\+key}} (str hash\+\_\+value, str private\+\_\+key\+\_\+path)
+\begin{DoxyCompactList}\small\item\em Signs a hash value using a private key. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{namespacemain_aab1cac8e1a88bc178447e81140373b4f}{verify\+\_\+signature\+\_\+with\+\_\+public\+\_\+key}} (str hash\+\_\+value, str signature, str public\+\_\+key\+\_\+path)
+\begin{DoxyCompactList}\small\item\em Verifies a signature using a public key. \end{DoxyCompactList}\item 
+None \mbox{\hyperlink{namespacemain_a5337aa5d61be22b581620ba916aa192a}{sign\+\_\+pdf\+\_\+using\+\_\+private\+\_\+key}} (str input\+\_\+pdf\+\_\+path, str output\+\_\+pdf\+\_\+path, str private\+\_\+key\+\_\+path)
+\begin{DoxyCompactList}\small\item\em Signs a PDF file by inserting a digital signature using a private key. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{namespacemain_aac6b1089ee677a3251a9b5877dd0c22d}{verify\+\_\+signed\+\_\+pdf}} (str input\+\_\+pdf\+\_\+path, str public\+\_\+key\+\_\+path)
+\begin{DoxyCompactList}\small\item\em Verifies the digital signature of a signed PDF file using a public key. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespacemain_a3140e9a5b6a71ffbf498198cfc471b88}{main}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{namespacemain_a4464a9589347f5fe271eabc3f99099de}{SIGNATURE\+\_\+\+LENGTH}} = 4096
+\item 
+int \mbox{\hyperlink{namespacemain_a9fbc6a89d946c534dbb2a8726c2f9c8d}{SIGNATURE\+\_\+\+LENGTH\+\_\+\+BYTES}} = \mbox{\hyperlink{namespacemain_a4464a9589347f5fe271eabc3f99099de}{SIGNATURE\+\_\+\+LENGTH}} // 8
+\item 
+int \mbox{\hyperlink{namespacemain_afd1a2ac2c5c2f3ddcc7ec3d284d44abf}{SIGNATURE\+\_\+\+LENGTH\+\_\+\+HEX}} = \mbox{\hyperlink{namespacemain_a9fbc6a89d946c534dbb2a8726c2f9c8d}{SIGNATURE\+\_\+\+LENGTH\+\_\+\+BYTES}} \texorpdfstring{$\ast$}{*} 2
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{namespacemain_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacemain_a6bd9b9b8136da81e6ef7ba918a61e7a5}\index{main@{main}!calculate\_sha256@{calculate\_sha256}}
+\index{calculate\_sha256@{calculate\_sha256}!main@{main}}
+\doxysubsubsection{\texorpdfstring{calculate\_sha256()}{calculate\_sha256()}}
+{\footnotesize\ttfamily \label{namespacemain_a6bd9b9b8136da81e6ef7ba918a61e7a5} 
+ str main.\+calculate\+\_\+sha256 (\begin{DoxyParamCaption}\item[{str}]{file\+\_\+path}{, }\item[{int}]{start\+\_\+position}{, }\item[{int}]{length\+\_\+of\+\_\+section}{}\end{DoxyParamCaption})}
+
+
+
+Calculates the SHA-\/256 hash of a file excluding a specific section. 
+
+This function computes the SHA-\/256 hash of a file, omitting a specified section defined by its starting position and length. It reads the file in two parts\+: before and after the excluded section, and concatenates the remaining data to calculate the hash.
+
+
+\begin{DoxyParams}{Parameters}
+{\em file\+\_\+path} & The path to the file to hash. Must be a valid path to a readable file. \\
+\hline
+{\em start\+\_\+position} & The byte offset where the excluded section begins. Must be within the file\textquotesingle{}s length. \\
+\hline
+{\em length\+\_\+of\+\_\+section} & The number of bytes to exclude from the hash computation.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+str\+: The computed SHA-\/256 hash as a hexadecimal string.
+\end{DoxyReturn}
+@raises File\+Not\+Found\+Error\+: If the specified file cannot be found or opened. @raises Value\+Error\+: If the start position or section length is invalid. @raises IOError\+: If an error occurs while reading the file. \Hypertarget{namespacemain_abe02849c32fe9935c7b98f8e12b82252}\index{main@{main}!create\_pdf\_placeholder@{create\_pdf\_placeholder}}
+\index{create\_pdf\_placeholder@{create\_pdf\_placeholder}!main@{main}}
+\doxysubsubsection{\texorpdfstring{create\_pdf\_placeholder()}{create\_pdf\_placeholder()}}
+{\footnotesize\ttfamily \label{namespacemain_abe02849c32fe9935c7b98f8e12b82252} 
+ None main.\+create\+\_\+pdf\+\_\+placeholder (\begin{DoxyParamCaption}\item[{str}]{input\+\_\+pdf\+\_\+path}{, }\item[{str}]{output\+\_\+pdf\+\_\+path}{, }\item[{int}]{signature\+\_\+length}{}\end{DoxyParamCaption})}
+
+
+
+Adds a signature placeholder to a PDF file. 
+
+This function reads an input PDF file, creates a new PDF with a placeholder for a digital signature, and writes the modified content to an output PDF file.
+
+
+\begin{DoxyParams}{Parameters}
+{\em input\+\_\+pdf\+\_\+path} & Path to the input PDF file. Must be a valid path to a readable PDF file. \\
+\hline
+{\em output\+\_\+pdf\+\_\+path} & Path where the modified PDF file with the signature placeholder will be saved. \\
+\hline
+{\em signature\+\_\+length} & The length of the signature placeholder in bytes. Determines the size of the placeholder.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+None
+\end{DoxyReturn}
+@raises File\+Not\+Found\+Error\+: If the input PDF file cannot be found or opened. @raises IOError\+: If the output PDF file cannot be written to the specified path. @raises Exception\+: If any error occurs during PDF processing. \Hypertarget{namespacemain_a376039fb3e1480f17ceb80fc50afb8cb}\index{main@{main}!find\_signature@{find\_signature}}
+\index{find\_signature@{find\_signature}!main@{main}}
+\doxysubsubsection{\texorpdfstring{find\_signature()}{find\_signature()}}
+{\footnotesize\ttfamily \label{namespacemain_a376039fb3e1480f17ceb80fc50afb8cb} 
+ Optional\mbox{[}int\mbox{]} main.\+find\+\_\+signature (\begin{DoxyParamCaption}\item[{str}]{pdf\+\_\+path}{}\end{DoxyParamCaption})}
+
+
+
+Finds the position of a signature placeholder in a PDF file. 
+
+This function searches for a specific pattern in a PDF file indicating the start of a signature placeholder. If the placeholder is found, the position of the signature content is returned. Otherwise, it returns {\ttfamily None}.
+
+
+\begin{DoxyParams}{Parameters}
+{\em pdf\+\_\+path} & The path to the PDF file to be searched. Must be a valid path to a readable file.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Optional\mbox{[}int\mbox{]}\+: The position (byte offset) of the signature content if the placeholder is found, or {\ttfamily None} if the placeholder is not found.
+\end{DoxyReturn}
+@raises File\+Not\+Found\+Error\+: If the specified PDF file cannot be found or opened. @raises IOError\+: If an error occurs while reading the file. \Hypertarget{namespacemain_ae2ee6cba198fef30b7a52546e29af47b}\index{main@{main}!get\_signature@{get\_signature}}
+\index{get\_signature@{get\_signature}!main@{main}}
+\doxysubsubsection{\texorpdfstring{get\_signature()}{get\_signature()}}
+{\footnotesize\ttfamily \label{namespacemain_ae2ee6cba198fef30b7a52546e29af47b} 
+ str main.\+get\+\_\+signature (\begin{DoxyParamCaption}\item[{str}]{pdf\+\_\+path}{, }\item[{int}]{position}{, }\item[{int}]{signature\+\_\+length}{}\end{DoxyParamCaption})}
+
+
+
+Extracts the signature data from a PDF file at a specified position. 
+
+This function reads a specified number of bytes starting from a given position in a PDF file and decodes it into a string representing the signature data.
+
+
+\begin{DoxyParams}{Parameters}
+{\em pdf\+\_\+path} & The path to the PDF file. Must be a valid path to a readable PDF file. \\
+\hline
+{\em position} & The byte offset where the signature data begins. Must be a valid position within the file. \\
+\hline
+{\em signature\+\_\+length} & The number of bytes to read for the signature data.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+str\+: The decoded signature data as a string.
+\end{DoxyReturn}
+@raises File\+Not\+Found\+Error\+: If the specified PDF file cannot be found or opened. @raises Value\+Error\+: If the position or signature length is invalid. @raises Unicode\+Decode\+Error\+: If the read bytes cannot be decoded into a string. \Hypertarget{namespacemain_a3140e9a5b6a71ffbf498198cfc471b88}\index{main@{main}!main@{main}}
+\index{main@{main}!main@{main}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily \label{namespacemain_a3140e9a5b6a71ffbf498198cfc471b88} 
+main.\+main (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{namespacemain_a3e0e475d5402fdf2b6d282a5b000223d}\index{main@{main}!replace\_bytes\_at\_offset@{replace\_bytes\_at\_offset}}
+\index{replace\_bytes\_at\_offset@{replace\_bytes\_at\_offset}!main@{main}}
+\doxysubsubsection{\texorpdfstring{replace\_bytes\_at\_offset()}{replace\_bytes\_at\_offset()}}
+{\footnotesize\ttfamily \label{namespacemain_a3e0e475d5402fdf2b6d282a5b000223d} 
+ None main.\+replace\+\_\+bytes\+\_\+at\+\_\+offset (\begin{DoxyParamCaption}\item[{str}]{file\+\_\+path}{, }\item[{int}]{offset}{, }\item[{bytes}]{new\+\_\+bytes}{, }\item[{str }]{output\+\_\+path}{ = {\ttfamily None}}\end{DoxyParamCaption})}
+
+
+
+Replaces a sequence of bytes at a specified offset in a binary file. 
+
+This function modifies a binary file by replacing a sequence of bytes at a given offset with a new sequence of bytes. The modified content can be saved to a new file or overwrite the original file.
+
+
+\begin{DoxyParams}{Parameters}
+{\em file\+\_\+path} & Path to the input binary file. Must be a valid and readable file path. \\
+\hline
+{\em offset} & The position (in bytes) where the replacement should begin. Must be within the file\textquotesingle{}s length and not exceed the file\textquotesingle{}s boundaries. \\
+\hline
+{\em new\+\_\+bytes} & The new sequence of bytes to replace at the specified offset. Must be a {\ttfamily bytes} object. \\
+\hline
+{\em output\+\_\+path} & Path to save the modified file. If {\ttfamily None}, the original file is overwritten. (Default is None.)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+None
+\end{DoxyReturn}
+@raises Value\+Error\+: If the offset is invalid (negative, too large, or causes an overflow). @raises File\+Not\+Found\+Error\+: If the input file cannot be found or opened. @raises IOError\+: If the output file cannot be written to the specified path. \Hypertarget{namespacemain_adc4a58e52c383b311607983ccbda971f}\index{main@{main}!sign\_hash\_with\_private\_key@{sign\_hash\_with\_private\_key}}
+\index{sign\_hash\_with\_private\_key@{sign\_hash\_with\_private\_key}!main@{main}}
+\doxysubsubsection{\texorpdfstring{sign\_hash\_with\_private\_key()}{sign\_hash\_with\_private\_key()}}
+{\footnotesize\ttfamily \label{namespacemain_adc4a58e52c383b311607983ccbda971f} 
+ str main.\+sign\+\_\+hash\+\_\+with\+\_\+private\+\_\+key (\begin{DoxyParamCaption}\item[{str}]{hash\+\_\+value}{, }\item[{str}]{private\+\_\+key\+\_\+path}{}\end{DoxyParamCaption})}
+
+
+
+Signs a hash value using a private key. 
+
+This function takes a hash value and a private key, and generates a signature for the hash using the RSA private key. The signature is returned as a hexadecimal string.
+
+
+\begin{DoxyParams}{Parameters}
+{\em hash\+\_\+value} & The hash value to sign, represented as a hexadecimal string. \\
+\hline
+{\em private\+\_\+key\+\_\+path} & Path to the private key file in PEM format. The file must be accessible and contain a valid RSA private key.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+str\+: The generated signature as a hexadecimal string.
+\end{DoxyReturn}
+@raises File\+Not\+Found\+Error\+: If the private key file cannot be found or opened. @raises Value\+Error\+: If the hash value is invalid or the private key is not in the correct format. @raises Exception\+: If signing the hash fails due to any other reason. \Hypertarget{namespacemain_a5337aa5d61be22b581620ba916aa192a}\index{main@{main}!sign\_pdf\_using\_private\_key@{sign\_pdf\_using\_private\_key}}
+\index{sign\_pdf\_using\_private\_key@{sign\_pdf\_using\_private\_key}!main@{main}}
+\doxysubsubsection{\texorpdfstring{sign\_pdf\_using\_private\_key()}{sign\_pdf\_using\_private\_key()}}
+{\footnotesize\ttfamily \label{namespacemain_a5337aa5d61be22b581620ba916aa192a} 
+ None main.\+sign\+\_\+pdf\+\_\+using\+\_\+private\+\_\+key (\begin{DoxyParamCaption}\item[{str}]{input\+\_\+pdf\+\_\+path}{, }\item[{str}]{output\+\_\+pdf\+\_\+path}{, }\item[{str}]{private\+\_\+key\+\_\+path}{}\end{DoxyParamCaption})}
+
+
+
+Signs a PDF file by inserting a digital signature using a private key. 
+
+This function copies the input PDF to the output path, checks if a signature placeholder exists, and if not, creates one. It then calculates the SHA-\/256 hash of the PDF excluding the placeholder section, signs this hash with the specified private key, and replaces the placeholder in the output PDF with the generated signature.
+
+
+\begin{DoxyParams}{Parameters}
+{\em input\+\_\+pdf\+\_\+path} & Path to the original PDF file to be signed. \\
+\hline
+{\em output\+\_\+pdf\+\_\+path} & Path where the signed PDF will be saved. \\
+\hline
+{\em private\+\_\+key\+\_\+path} & Path to the private key file (PEM format) used for signing.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+None
+\end{DoxyReturn}
+@raises File\+Not\+Found\+Error\+: If any of the input files (PDF or private key) cannot be found. @raises Value\+Error\+: If signature placeholder is not found or signature length is invalid. @raises Exception\+: For other errors such as issues with hashing, signing, or file I/O. \Hypertarget{namespacemain_aab1cac8e1a88bc178447e81140373b4f}\index{main@{main}!verify\_signature\_with\_public\_key@{verify\_signature\_with\_public\_key}}
+\index{verify\_signature\_with\_public\_key@{verify\_signature\_with\_public\_key}!main@{main}}
+\doxysubsubsection{\texorpdfstring{verify\_signature\_with\_public\_key()}{verify\_signature\_with\_public\_key()}}
+{\footnotesize\ttfamily \label{namespacemain_aab1cac8e1a88bc178447e81140373b4f} 
+ bool main.\+verify\+\_\+signature\+\_\+with\+\_\+public\+\_\+key (\begin{DoxyParamCaption}\item[{str}]{hash\+\_\+value}{, }\item[{str}]{signature}{, }\item[{str}]{public\+\_\+key\+\_\+path}{}\end{DoxyParamCaption})}
+
+
+
+Verifies a signature using a public key. 
+
+This function takes a hash value, a signature, and a public key to verify the authenticity of the signature. It returns {\ttfamily True} if the signature is valid, otherwise returns {\ttfamily False}.
+
+
+\begin{DoxyParams}{Parameters}
+{\em hash\+\_\+value} & The original hash value, represented as a hexadecimal string. \\
+\hline
+{\em signature} & The signature to verify, represented as a hexadecimal string. \\
+\hline
+{\em public\+\_\+key\+\_\+path} & Path to the public key file in PEM format. The file must be accessible and contain a valid RSA public key.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool\+: {\ttfamily True} if the signature is valid, {\ttfamily False} otherwise.
+\end{DoxyReturn}
+@raises File\+Not\+Found\+Error\+: If the public key file cannot be found or opened. @raises Value\+Error\+: If the hash value or signature is invalid, or the public key is not in the correct format. @raises Exception\+: If verification fails for any other reason. \Hypertarget{namespacemain_aac6b1089ee677a3251a9b5877dd0c22d}\index{main@{main}!verify\_signed\_pdf@{verify\_signed\_pdf}}
+\index{verify\_signed\_pdf@{verify\_signed\_pdf}!main@{main}}
+\doxysubsubsection{\texorpdfstring{verify\_signed\_pdf()}{verify\_signed\_pdf()}}
+{\footnotesize\ttfamily \label{namespacemain_aac6b1089ee677a3251a9b5877dd0c22d} 
+ bool main.\+verify\+\_\+signed\+\_\+pdf (\begin{DoxyParamCaption}\item[{str}]{input\+\_\+pdf\+\_\+path}{, }\item[{str}]{public\+\_\+key\+\_\+path}{}\end{DoxyParamCaption})}
+
+
+
+Verifies the digital signature of a signed PDF file using a public key. 
+
+This function locates the signature placeholder in the PDF, extracts the signature, calculates the SHA-\/256 hash of the PDF excluding the signature section, and verifies the signature against the hash using the provided public key.
+
+
+\begin{DoxyParams}{Parameters}
+{\em input\+\_\+pdf\+\_\+path} & Path to the signed PDF file to verify. \\
+\hline
+{\em public\+\_\+key\+\_\+path} & Path to the public key file (PEM format) used for verification.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool\+: Returns True if the signature is valid, False otherwise.
+\end{DoxyReturn}
+@raises File\+Not\+Found\+Error\+: If the PDF file or public key file cannot be found. @raises Value\+Error\+: If the signature placeholder is missing or signature length is invalid. @raises Exception\+: For errors occurring during hashing, signature extraction, or verification. 
+
+\label{doc-var-members}
+\Hypertarget{namespacemain_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{namespacemain_a4464a9589347f5fe271eabc3f99099de}\index{main@{main}!SIGNATURE\_LENGTH@{SIGNATURE\_LENGTH}}
+\index{SIGNATURE\_LENGTH@{SIGNATURE\_LENGTH}!main@{main}}
+\doxysubsubsection{\texorpdfstring{SIGNATURE\_LENGTH}{SIGNATURE\_LENGTH}}
+{\footnotesize\ttfamily \label{namespacemain_a4464a9589347f5fe271eabc3f99099de} 
+int main.\+SIGNATURE\+\_\+\+LENGTH = 4096}
+
+\Hypertarget{namespacemain_a9fbc6a89d946c534dbb2a8726c2f9c8d}\index{main@{main}!SIGNATURE\_LENGTH\_BYTES@{SIGNATURE\_LENGTH\_BYTES}}
+\index{SIGNATURE\_LENGTH\_BYTES@{SIGNATURE\_LENGTH\_BYTES}!main@{main}}
+\doxysubsubsection{\texorpdfstring{SIGNATURE\_LENGTH\_BYTES}{SIGNATURE\_LENGTH\_BYTES}}
+{\footnotesize\ttfamily \label{namespacemain_a9fbc6a89d946c534dbb2a8726c2f9c8d} 
+int main.\+SIGNATURE\+\_\+\+LENGTH\+\_\+\+BYTES = \mbox{\hyperlink{namespacemain_a4464a9589347f5fe271eabc3f99099de}{SIGNATURE\+\_\+\+LENGTH}} // 8}
+
+\Hypertarget{namespacemain_afd1a2ac2c5c2f3ddcc7ec3d284d44abf}\index{main@{main}!SIGNATURE\_LENGTH\_HEX@{SIGNATURE\_LENGTH\_HEX}}
+\index{SIGNATURE\_LENGTH\_HEX@{SIGNATURE\_LENGTH\_HEX}!main@{main}}
+\doxysubsubsection{\texorpdfstring{SIGNATURE\_LENGTH\_HEX}{SIGNATURE\_LENGTH\_HEX}}
+{\footnotesize\ttfamily \label{namespacemain_afd1a2ac2c5c2f3ddcc7ec3d284d44abf} 
+int main.\+SIGNATURE\+\_\+\+LENGTH\+\_\+\+HEX = \mbox{\hyperlink{namespacemain_a9fbc6a89d946c534dbb2a8726c2f9c8d}{SIGNATURE\+\_\+\+LENGTH\+\_\+\+BYTES}} \texorpdfstring{$\ast$}{*} 2}
+

@@ -1,0 +1,4 @@
+var examples =
+[
+    [ "(str pdf_path)", "_c_1_2_users_2macie_2_one_drive_2_pulpit_2informatyka_2_b_s_k_2_p_ad_e_s-_b_s_k-2025_2_signing_p_d_fsrc_2main_8py-example.html", null ]
+];

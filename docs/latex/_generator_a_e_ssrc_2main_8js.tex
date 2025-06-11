@@ -1,0 +1,193 @@
+\doxysection{Generator\+AESsrc/main.js File Reference}
+\hypertarget{_generator_a_e_ssrc_2main_8js}{}\label{_generator_a_e_ssrc_2main_8js}\index{main.js@{main.js}}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+function \mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a31546c094c42184a86101814f12f6276}{get\+Available\+Drives}} ()
+\item 
+function \mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a5880286a97e6ffca2d935d98ca1356f4}{generate\+RSAKeys}} (disk\+Path, user\+PIN)
+\item 
+function \mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a52190aae589c870c686f4f93cf41eb1d}{hash\+PIN}} (pin)
+\item 
+function \mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_aceec6da763423b4745e8f1485d699d45}{encrypt\+With\+AES}} (data, aes\+Key)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a92b303b76a3f942ea819498907d5e83c}{const}}
+\item 
+\mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a92b303b76a3f942ea819498907d5e83c}{const}} \mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a1fdc7709faf62dce60620fb3f9d3453c}{path}} = require(\textquotesingle{}path\textquotesingle{})
+\item 
+\mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a92b303b76a3f942ea819498907d5e83c}{const}} \mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a2e47e1f004220675d0fa39b8255bd78f}{fs}} = require(\textquotesingle{}fs\textquotesingle{})
+\item 
+\mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a92b303b76a3f942ea819498907d5e83c}{const}} \mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a607091759c690210419aa15f07f84b9f}{forge}} = require(\textquotesingle{}node-\/forge\textquotesingle{})
+\item 
+\mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a92b303b76a3f942ea819498907d5e83c}{const}} \mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a44d29f599486b46f8b3f74e5ff5e8b94}{crypto}} =require(\textquotesingle{}crypto\textquotesingle{})
+\item 
+\mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a92b303b76a3f942ea819498907d5e83c}{const}} \mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_afd68f54fec210ddd90d8fb51baff9e85}{create\+Window}}
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{_generator_a_e_ssrc_2main_8js_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{_generator_a_e_ssrc_2main_8js_aceec6da763423b4745e8f1485d699d45}\index{main.js@{main.js}!encryptWithAES@{encryptWithAES}}
+\index{encryptWithAES@{encryptWithAES}!main.js@{main.js}}
+\doxysubsubsection{\texorpdfstring{encryptWithAES()}{encryptWithAES()}}
+{\footnotesize\ttfamily \label{_generator_a_e_ssrc_2main_8js_aceec6da763423b4745e8f1485d699d45} 
+function encrypt\+With\+AES (\begin{DoxyParamCaption}\item[{}]{data}{, }\item[{}]{aes\+Key}{}\end{DoxyParamCaption})}
+
+Encrypts data using AES-\/256-\/\+ECB encryption.
+
+This function encrypts a given string or buffer using a 256-\/bit AES key and the ECB (Electronic Codebook) mode of operation. The encrypted result is returned as a Buffer.
+
+@function 
+\begin{DoxyParams}{Parameters}
+{\em \{string\texorpdfstring{$\vert$}{|}\+Buffer\}} & data -\/ The data to be encrypted. Can be a UTF-\/8 string or a Buffer. \\
+\hline
+{\em \{\+Buffer\}} & aes\+Key -\/ A 256-\/bit AES key (32 bytes). Must be a valid Buffer of exactly 32 bytes. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\{Buffer\} The encrypted data as a Buffer. 
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em \{\+Error\}} & If the AES key is invalid (not a Buffer of 32 bytes) or encryption fails. \\
+\hline
+\end{DoxyExceptions}
+\Hypertarget{_generator_a_e_ssrc_2main_8js_a5880286a97e6ffca2d935d98ca1356f4}\index{main.js@{main.js}!generateRSAKeys@{generateRSAKeys}}
+\index{generateRSAKeys@{generateRSAKeys}!main.js@{main.js}}
+\doxysubsubsection{\texorpdfstring{generateRSAKeys()}{generateRSAKeys()}}
+{\footnotesize\ttfamily \label{_generator_a_e_ssrc_2main_8js_a5880286a97e6ffca2d935d98ca1356f4} 
+function generate\+RSAKeys (\begin{DoxyParamCaption}\item[{}]{disk\+Path}{, }\item[{}]{user\+PIN}{}\end{DoxyParamCaption})}
+
+Generates an RSA key pair, encrypts the private key, and saves the keys to disk.
+
+This function creates a 4096-\/bit RSA key pair, encrypts the private key using a user-\/provided PIN, and saves both the public and encrypted private keys as files on the specified disk path.
+
+@function 
+\begin{DoxyParams}{Parameters}
+{\em \{string\}} & disk\+Path -\/ The directory path where the RSA key files will be saved. Must be a valid and writable directory path. \\
+\hline
+{\em \{string\}} & user\+PIN -\/ A PIN provided by the user to encrypt the private key. Must be a non-\/empty string. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\{Promise$<$\+Object$>$\} A promise that resolves to an object containing\+:
+\begin{DoxyItemize}
+\item {\ttfamily public\+Key\+Path} (string)\+: The file path of the saved public key.
+\item {\ttfamily private\+Key\+Path} (string)\+: The file path of the saved encrypted private key. 
+\end{DoxyItemize}
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em \{\+Error\}} & If key generation, encryption, or file writing fails. \\
+\hline
+\end{DoxyExceptions}
+\Hypertarget{_generator_a_e_ssrc_2main_8js_a31546c094c42184a86101814f12f6276}\index{main.js@{main.js}!getAvailableDrives@{getAvailableDrives}}
+\index{getAvailableDrives@{getAvailableDrives}!main.js@{main.js}}
+\doxysubsubsection{\texorpdfstring{getAvailableDrives()}{getAvailableDrives()}}
+{\footnotesize\ttfamily \label{_generator_a_e_ssrc_2main_8js_a31546c094c42184a86101814f12f6276} 
+function get\+Available\+Drives (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Retrieves a list of available logical drives on the system.
+
+This function executes a shell command to query logical disks using {\ttfamily wmic}. The results are processed to extract drive names (e.\+g., "{}\+C\+:"{}, "{}\+D\+:"{}).
+
+@function \begin{DoxyReturn}{Returns}
+\{Promise$<$string\mbox{[}$\,$\mbox{]}$>$\} A promise that resolves to an array of drive names. Each drive is represented as a string (e.\+g., "{}\+C\+:"{}). 
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em \{\+Error\}} & If there is an issue executing the shell command. \\
+\hline
+\end{DoxyExceptions}
+\Hypertarget{_generator_a_e_ssrc_2main_8js_a52190aae589c870c686f4f93cf41eb1d}\index{main.js@{main.js}!hashPIN@{hashPIN}}
+\index{hashPIN@{hashPIN}!main.js@{main.js}}
+\doxysubsubsection{\texorpdfstring{hashPIN()}{hashPIN()}}
+{\footnotesize\ttfamily \label{_generator_a_e_ssrc_2main_8js_a52190aae589c870c686f4f93cf41eb1d} 
+function hash\+PIN (\begin{DoxyParamCaption}\item[{}]{pin}{}\end{DoxyParamCaption})}
+
+Hashes a given PIN using the SHA-\/256 algorithm.
+
+This function takes a string PIN as input, validates it, and returns a hashed value using the {\ttfamily sha256} hashing algorithm. The hashed value is a Buffer object.
+
+@function 
+\begin{DoxyParams}{Parameters}
+{\em \{string\}} & pin -\/ The PIN to be hashed. It must be a non-\/empty string. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\{Buffer\} The hashed value of the PIN as a Buffer object. 
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em \{\+Error\}} & If the input PIN is invalid (not a string or empty). \\
+\hline
+\end{DoxyExceptions}
+
+
+\label{doc-var-members}
+\Hypertarget{_generator_a_e_ssrc_2main_8js_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{_generator_a_e_ssrc_2main_8js_a92b303b76a3f942ea819498907d5e83c}\index{main.js@{main.js}!const@{const}}
+\index{const@{const}!main.js@{main.js}}
+\doxysubsubsection{\texorpdfstring{const}{const}}
+{\footnotesize\ttfamily \label{_generator_a_e_ssrc_2main_8js_a92b303b76a3f942ea819498907d5e83c} 
+const}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{BrowserWindow,\ app,\ ipcMain\}\ =\ require(\textcolor{stringliteral}{'electron'})\textcolor{keyword}{}}
+\DoxyCodeLine{\textcolor{keyword}{const\ }\{exec\}\ =\ require(\textcolor{stringliteral}{'child\_process'})}
+
+\end{DoxyCode}
+\Hypertarget{_generator_a_e_ssrc_2main_8js_afd68f54fec210ddd90d8fb51baff9e85}\index{main.js@{main.js}!createWindow@{createWindow}}
+\index{createWindow@{createWindow}!main.js@{main.js}}
+\doxysubsubsection{\texorpdfstring{createWindow}{createWindow}}
+{\footnotesize\ttfamily \label{_generator_a_e_ssrc_2main_8js_afd68f54fec210ddd90d8fb51baff9e85} 
+\mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a92b303b76a3f942ea819498907d5e83c}{const}} create\+Window}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=\ ()=>\{}
+\DoxyCodeLine{\ \ \ \ \textcolor{keyword}{const}\ win\ =\ \textcolor{keyword}{new}\ BrowserWindow(\{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ width:800,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ height:600,\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ webPreferences:\{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ preload:\ \mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a1fdc7709faf62dce60620fb3f9d3453c}{path}}.join(\_\_dirname,\ \textcolor{stringliteral}{'preload.js'})}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \})}
+\DoxyCodeLine{\ \ \ \ win.loadFile(\textcolor{stringliteral}{"{}index.html"{}})}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{app.whenReady().then(()=>\{}
+\DoxyCodeLine{\ \ \ \ \mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_afd68f54fec210ddd90d8fb51baff9e85}{createWindow}}();}
+\DoxyCodeLine{\})}
+
+\end{DoxyCode}
+\Hypertarget{_generator_a_e_ssrc_2main_8js_a44d29f599486b46f8b3f74e5ff5e8b94}\index{main.js@{main.js}!crypto@{crypto}}
+\index{crypto@{crypto}!main.js@{main.js}}
+\doxysubsubsection{\texorpdfstring{crypto}{crypto}}
+{\footnotesize\ttfamily \label{_generator_a_e_ssrc_2main_8js_a44d29f599486b46f8b3f74e5ff5e8b94} 
+\mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a92b303b76a3f942ea819498907d5e83c}{const}} crypto =require(\textquotesingle{}crypto\textquotesingle{})}
+
+\Hypertarget{_generator_a_e_ssrc_2main_8js_a607091759c690210419aa15f07f84b9f}\index{main.js@{main.js}!forge@{forge}}
+\index{forge@{forge}!main.js@{main.js}}
+\doxysubsubsection{\texorpdfstring{forge}{forge}}
+{\footnotesize\ttfamily \label{_generator_a_e_ssrc_2main_8js_a607091759c690210419aa15f07f84b9f} 
+\mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a92b303b76a3f942ea819498907d5e83c}{const}} forge = require(\textquotesingle{}node-\/forge\textquotesingle{})}
+
+\Hypertarget{_generator_a_e_ssrc_2main_8js_a2e47e1f004220675d0fa39b8255bd78f}\index{main.js@{main.js}!fs@{fs}}
+\index{fs@{fs}!main.js@{main.js}}
+\doxysubsubsection{\texorpdfstring{fs}{fs}}
+{\footnotesize\ttfamily \label{_generator_a_e_ssrc_2main_8js_a2e47e1f004220675d0fa39b8255bd78f} 
+\mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a92b303b76a3f942ea819498907d5e83c}{const}} fs = require(\textquotesingle{}fs\textquotesingle{})}
+
+\Hypertarget{_generator_a_e_ssrc_2main_8js_a1fdc7709faf62dce60620fb3f9d3453c}\index{main.js@{main.js}!path@{path}}
+\index{path@{path}!main.js@{main.js}}
+\doxysubsubsection{\texorpdfstring{path}{path}}
+{\footnotesize\ttfamily \label{_generator_a_e_ssrc_2main_8js_a1fdc7709faf62dce60620fb3f9d3453c} 
+\mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a92b303b76a3f942ea819498907d5e83c}{const}} path = require(\textquotesingle{}path\textquotesingle{})}
+

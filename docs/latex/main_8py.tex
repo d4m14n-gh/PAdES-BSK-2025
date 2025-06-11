@@ -1,0 +1,39 @@
+\doxysection{main.\+py File Reference}
+\hypertarget{main_8py}{}\label{main_8py}\index{main.py@{main.py}}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespacemain}{main}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+None \mbox{\hyperlink{namespacemain_abe02849c32fe9935c7b98f8e12b82252}{main.\+create\+\_\+pdf\+\_\+placeholder}} (str input\+\_\+pdf\+\_\+path, str output\+\_\+pdf\+\_\+path, int signature\+\_\+length)
+\begin{DoxyCompactList}\small\item\em Adds a signature placeholder to a PDF file. \end{DoxyCompactList}\item 
+None \mbox{\hyperlink{namespacemain_a3e0e475d5402fdf2b6d282a5b000223d}{main.\+replace\+\_\+bytes\+\_\+at\+\_\+offset}} (str file\+\_\+path, int offset, bytes new\+\_\+bytes, str output\+\_\+path=None)
+\begin{DoxyCompactList}\small\item\em Replaces a sequence of bytes at a specified offset in a binary file. \end{DoxyCompactList}\item 
+Optional\mbox{[}int\mbox{]} \mbox{\hyperlink{namespacemain_a376039fb3e1480f17ceb80fc50afb8cb}{main.\+find\+\_\+signature}} (str pdf\+\_\+path)
+\begin{DoxyCompactList}\small\item\em Finds the position of a signature placeholder in a PDF file. \end{DoxyCompactList}\item 
+str \mbox{\hyperlink{namespacemain_ae2ee6cba198fef30b7a52546e29af47b}{main.\+get\+\_\+signature}} (str pdf\+\_\+path, int position, int signature\+\_\+length)
+\begin{DoxyCompactList}\small\item\em Extracts the signature data from a PDF file at a specified position. \end{DoxyCompactList}\item 
+str \mbox{\hyperlink{namespacemain_a6bd9b9b8136da81e6ef7ba918a61e7a5}{main.\+calculate\+\_\+sha256}} (str file\+\_\+path, int start\+\_\+position, int length\+\_\+of\+\_\+section)
+\begin{DoxyCompactList}\small\item\em Calculates the SHA-\/256 hash of a file excluding a specific section. \end{DoxyCompactList}\item 
+str \mbox{\hyperlink{namespacemain_adc4a58e52c383b311607983ccbda971f}{main.\+sign\+\_\+hash\+\_\+with\+\_\+private\+\_\+key}} (str hash\+\_\+value, str private\+\_\+key\+\_\+path)
+\begin{DoxyCompactList}\small\item\em Signs a hash value using a private key. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{namespacemain_aab1cac8e1a88bc178447e81140373b4f}{main.\+verify\+\_\+signature\+\_\+with\+\_\+public\+\_\+key}} (str hash\+\_\+value, str signature, str public\+\_\+key\+\_\+path)
+\begin{DoxyCompactList}\small\item\em Verifies a signature using a public key. \end{DoxyCompactList}\item 
+None \mbox{\hyperlink{namespacemain_a5337aa5d61be22b581620ba916aa192a}{main.\+sign\+\_\+pdf\+\_\+using\+\_\+private\+\_\+key}} (str input\+\_\+pdf\+\_\+path, str output\+\_\+pdf\+\_\+path, str private\+\_\+key\+\_\+path)
+\begin{DoxyCompactList}\small\item\em Signs a PDF file by inserting a digital signature using a private key. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{namespacemain_aac6b1089ee677a3251a9b5877dd0c22d}{main.\+verify\+\_\+signed\+\_\+pdf}} (str input\+\_\+pdf\+\_\+path, str public\+\_\+key\+\_\+path)
+\begin{DoxyCompactList}\small\item\em Verifies the digital signature of a signed PDF file using a public key. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespacemain_a3140e9a5b6a71ffbf498198cfc471b88}{main.\+main}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{namespacemain_a4464a9589347f5fe271eabc3f99099de}{main.\+SIGNATURE\+\_\+\+LENGTH}} = 4096
+\item 
+int \mbox{\hyperlink{namespacemain_a9fbc6a89d946c534dbb2a8726c2f9c8d}{main.\+SIGNATURE\+\_\+\+LENGTH\+\_\+\+BYTES}} = \mbox{\hyperlink{namespacemain_a4464a9589347f5fe271eabc3f99099de}{SIGNATURE\+\_\+\+LENGTH}} // 8
+\item 
+int \mbox{\hyperlink{namespacemain_afd1a2ac2c5c2f3ddcc7ec3d284d44abf}{main.\+SIGNATURE\+\_\+\+LENGTH\+\_\+\+HEX}} = \mbox{\hyperlink{namespacemain_a9fbc6a89d946c534dbb2a8726c2f9c8d}{SIGNATURE\+\_\+\+LENGTH\+\_\+\+BYTES}} \texorpdfstring{$\ast$}{*} 2
+\end{DoxyCompactItemize}

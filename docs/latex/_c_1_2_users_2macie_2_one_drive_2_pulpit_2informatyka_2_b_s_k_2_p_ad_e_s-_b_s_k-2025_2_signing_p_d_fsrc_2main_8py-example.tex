@@ -1,0 +1,407 @@
+\doxysection{C\+:/\+Users/macie/\+One\+Drive/\+Pulpit/informatyka/\+BSK/\+PAd\+ES-\/\+BSK-\/2025/\+Signing\+PDFsrc/main.\+py}
+\hypertarget{_c_1_2_users_2macie_2_one_drive_2_pulpit_2informatyka_2_b_s_k_2_p_ad_e_s-_b_s_k-2025_2_signing_p_d_fsrc_2main_8py-example}{}\label{_c_1_2_users_2macie_2_one_drive_2_pulpit_2informatyka_2_b_s_k_2_p_ad_e_s-_b_s_k-2025_2_signing_p_d_fsrc_2main_8py-example}Finds the position of a signature placeholder in a PDF file.
+
+Finds the position of a signature placeholder in a PDF file.\+This function searches for a specific pattern in a PDF file indicating the start of a signature placeholder. If the placeholder is found, the position of the signature content is returned. Otherwise, it returns {\ttfamily None}.
+
+
+\begin{DoxyParams}{Parameters}
+{\em pdf\+\_\+path} & The path to the PDF file to be searched. Must be a valid path to a readable file.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Optional\mbox{[}int\mbox{]}\+: The position (byte offset) of the signature content if the placeholder is found, or {\ttfamily None} if the placeholder is not found.
+\end{DoxyReturn}
+@raises File\+Not\+Found\+Error\+: If the specified PDF file cannot be found or opened. @raises IOError\+: If an error occurs while reading the file.\hypertarget{main.py_autotoc_md0}{}\doxysubsection{\texorpdfstring{Example usage of find\+\_\+signature\+:}{Example usage of find\+\_\+signature\+:}}\label{main.py_autotoc_md0}
+pdf\+\_\+path = "{}example\+\_\+with\+\_\+placeholder.\+pdf"{}
+
+try\+: signature\+\_\+position = find\+\_\+signature(pdf\+\_\+path) if signature\+\_\+position is not None\+: print(f"{}\+Signature placeholder found at byte offset\+: \{signature\+\_\+position\}"{}) else\+: print("{}\+No signature placeholder found in the PDF."{}) except Exception as e\+: print(f"{}\+An error occurred\+: \{e\}"{})
+
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{00001\ \textcolor{keyword}{import}\ shutil}
+\DoxyCodeLine{00002\ \textcolor{keyword}{import}\ hashlib}
+\DoxyCodeLine{00003\ \textcolor{keyword}{import}\ argparse}
+\DoxyCodeLine{00004\ \textcolor{keyword}{from}\ cryptography.hazmat.primitives\ \textcolor{keyword}{import}\ serialization}
+\DoxyCodeLine{00005\ \textcolor{keyword}{from}\ cryptography.hazmat.primitives.asymmetric\ \textcolor{keyword}{import}\ padding}
+\DoxyCodeLine{00006\ \textcolor{keyword}{from}\ cryptography.hazmat.primitives\ \textcolor{keyword}{import}\ hashes}
+\DoxyCodeLine{00007\ \textcolor{keyword}{from}\ cryptography.hazmat.backends\ \textcolor{keyword}{import}\ default\_backend}
+\DoxyCodeLine{00008\ \textcolor{keyword}{from}\ typing\ \textcolor{keyword}{import}\ Optional}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{import}\ pypdf}
+\DoxyCodeLine{00011\ \textcolor{keyword}{from}\ pypdf.generic\ \textcolor{keyword}{import}\ DictionaryObject,\ NameObject,\ ByteStringObject,\ create\_string\_object}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{def\ }create\_pdf\_placeholder(input\_pdf\_path:\ str,\ output\_pdf\_path:\ str,\ signature\_length:\ int)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}!}}
+\DoxyCodeLine{00016\ \textcolor{stringliteral}{\ \ \ \ Adds\ a\ signature\ placeholder\ to\ a\ PDF\ file.}}
+\DoxyCodeLine{00017\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00018\ \textcolor{stringliteral}{\ \ \ \ This\ function\ reads\ an\ input\ PDF\ file,\ creates\ a\ new\ PDF\ with\ a\ placeholder\ }}
+\DoxyCodeLine{00019\ \textcolor{stringliteral}{\ \ \ \ for\ a\ digital\ signature,\ and\ writes\ the\ modified\ content\ to\ an\ output\ PDF\ file.}}
+\DoxyCodeLine{00020\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00021\ \textcolor{stringliteral}{\ \ \ \ @param\ input\_pdf\_path:\ Path\ to\ the\ input\ PDF\ file.}}
+\DoxyCodeLine{00022\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Must\ be\ a\ valid\ path\ to\ a\ readable\ PDF\ file.}}
+\DoxyCodeLine{00023\ \textcolor{stringliteral}{\ \ \ \ @param\ output\_pdf\_path:\ Path\ where\ the\ modified\ PDF\ file\ with\ the\ signature\ }}
+\DoxyCodeLine{00024\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ placeholder\ will\ be\ saved.}}
+\DoxyCodeLine{00025\ \textcolor{stringliteral}{\ \ \ \ @param\ signature\_length:\ The\ length\ of\ the\ signature\ placeholder\ in\ bytes.}}
+\DoxyCodeLine{00026\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Determines\ the\ size\ of\ the\ placeholder.}}
+\DoxyCodeLine{00027\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00028\ \textcolor{stringliteral}{\ \ \ \ @returns\ None}}
+\DoxyCodeLine{00029\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00030\ \textcolor{stringliteral}{\ \ \ \ @raises\ FileNotFoundError:\ If\ the\ input\ PDF\ file\ cannot\ be\ found\ or\ opened.}}
+\DoxyCodeLine{00031\ \textcolor{stringliteral}{\ \ \ \ @raises\ IOError:\ If\ the\ output\ PDF\ file\ cannot\ be\ written\ to\ the\ specified\ path.}}
+\DoxyCodeLine{00032\ \textcolor{stringliteral}{\ \ \ \ @raises\ Exception:\ If\ any\ error\ occurs\ during\ PDF\ processing.}}
+\DoxyCodeLine{00033\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00034\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{with}\ open(input\_pdf\_path,\ \textcolor{stringliteral}{'rb'})\ \textcolor{keyword}{as}\ input\_file,\ open(output\_pdf\_path,\ \textcolor{stringliteral}{'wb'})\ \textcolor{keyword}{as}\ output\_file:}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ reader\ =\ pypdf.PdfReader(input\_file)}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ writer\ =\ pypdf.PdfWriter()}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ page\ \textcolor{keywordflow}{in}\ reader.pages:}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \ \ \ writer.add\_page(page)}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ Tworzymy\ obiekt\ podpisu\ /Sig\ —\ BEZ\ formularzy,\ bez\ Annots}}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ sig\_dict\ =\ DictionaryObject()}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ sig\_dict.update(\{}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ NameObject(\textcolor{stringliteral}{"{}/Type"{}}):\ NameObject(\textcolor{stringliteral}{"{}/BskSignature"{}}),}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ NameObject(\textcolor{stringliteral}{"{}/Contents"{}}):\ create\_string\_object(\textcolor{stringliteral}{"{}0"{}}*signature\_length),\ \textcolor{comment}{\#ByteStringObject(\ random.randbytes(signature\_length\ //\ 8)\ ),\ \#\ rsa\ 4096}}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \})}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ writer.\_add\_object(sig\_dict)}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \textcolor{keyword}{with}\ open(output\_pdf\_path,\ \textcolor{stringliteral}{"{}wb"{}})\ \textcolor{keyword}{as}\ f\_out:}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ writer.write(f\_out)}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{keyword}{def\ }replace\_bytes\_at\_offset(file\_path:\ str,\ offset:\ int,\ new\_bytes:\ bytes,\ output\_path:\ str\ =\ \textcolor{keywordtype}{None})\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}!}}
+\DoxyCodeLine{00054\ \textcolor{stringliteral}{\ \ \ \ Replaces\ a\ sequence\ of\ bytes\ at\ a\ specified\ offset\ in\ a\ binary\ file.}}
+\DoxyCodeLine{00055\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00056\ \textcolor{stringliteral}{\ \ \ \ This\ function\ modifies\ a\ binary\ file\ by\ replacing\ a\ sequence\ of\ bytes\ at\ a\ given\ offset\ }}
+\DoxyCodeLine{00057\ \textcolor{stringliteral}{\ \ \ \ with\ a\ new\ sequence\ of\ bytes.\ The\ modified\ content\ can\ be\ saved\ to\ a\ new\ file\ or\ }}
+\DoxyCodeLine{00058\ \textcolor{stringliteral}{\ \ \ \ overwrite\ the\ original\ file.}}
+\DoxyCodeLine{00059\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00060\ \textcolor{stringliteral}{\ \ \ \ @param\ file\_path:\ Path\ to\ the\ input\ binary\ file.\ Must\ be\ a\ valid\ and\ readable\ file\ path.}}
+\DoxyCodeLine{00061\ \textcolor{stringliteral}{\ \ \ \ @param\ offset:\ The\ position\ (in\ bytes)\ where\ the\ replacement\ should\ begin.\ Must\ be\ within\ }}
+\DoxyCodeLine{00062\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ the\ file's\ length\ and\ not\ exceed\ the\ file's\ boundaries.}}
+\DoxyCodeLine{00063\ \textcolor{stringliteral}{\ \ \ \ @param\ new\_bytes:\ The\ new\ sequence\ of\ bytes\ to\ replace\ at\ the\ specified\ offset.}}
+\DoxyCodeLine{00064\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Must\ be\ a\ \`{}bytes\`{}\ object.}}
+\DoxyCodeLine{00065\ \textcolor{stringliteral}{\ \ \ \ @param\ output\_path:\ Path\ to\ save\ the\ modified\ file.\ If\ \`{}None\`{},\ the\ original\ file\ is\ overwritten.}}
+\DoxyCodeLine{00066\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (Default\ is\ None.)}}
+\DoxyCodeLine{00067\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00068\ \textcolor{stringliteral}{\ \ \ \ @returns\ None}}
+\DoxyCodeLine{00069\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00070\ \textcolor{stringliteral}{\ \ \ \ @raises\ ValueError:\ If\ the\ offset\ is\ invalid\ (negative,\ too\ large,\ or\ causes\ an\ overflow).}}
+\DoxyCodeLine{00071\ \textcolor{stringliteral}{\ \ \ \ @raises\ FileNotFoundError:\ If\ the\ input\ file\ cannot\ be\ found\ or\ opened.}}
+\DoxyCodeLine{00072\ \textcolor{stringliteral}{\ \ \ \ @raises\ IOError:\ If\ the\ output\ file\ cannot\ be\ written\ to\ the\ specified\ path.}}
+\DoxyCodeLine{00073\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00074\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keyword}{with}\ open(file\_path,\ \textcolor{stringliteral}{'rb'})\ \textcolor{keyword}{as}\ f:}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ content\ =\ bytearray(f.read())}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordflow}{if}\ offset\ <\ 0\ \textcolor{keywordflow}{or}\ offset\ +\ len(new\_bytes)\ >\ len(content):}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{raise}\ ValueError(\textcolor{stringliteral}{"{}Wrong\ offset."{}})}
+\DoxyCodeLine{00079\ \ \ \ \ content[offset:offset\ +\ len(new\_bytes)]\ =\ new\_bytes}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keywordflow}{if}\ output\_path\ \textcolor{keywordflow}{is}\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ output\_path\ =\ file\_path}
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keyword}{with}\ open(output\_path,\ \textcolor{stringliteral}{'wb'})\ \textcolor{keyword}{as}\ f:}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ f.write(content)}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \textcolor{keyword}{def\ }find\_signature(pdf\_path:\ str)\ -\/>\ Optional[int]:}
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}!}}
+\DoxyCodeLine{00087\ \textcolor{stringliteral}{\ \ \ \ Finds\ the\ position\ of\ a\ signature\ placeholder\ in\ a\ PDF\ file.}}
+\DoxyCodeLine{00088\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00089\ \textcolor{stringliteral}{\ \ \ \ This\ function\ searches\ for\ a\ specific\ pattern\ in\ a\ PDF\ file\ indicating\ the\ start\ of\ }}
+\DoxyCodeLine{00090\ \textcolor{stringliteral}{\ \ \ \ a\ signature\ placeholder.\ If\ the\ placeholder\ is\ found,\ the\ position\ of\ the\ signature\ }}
+\DoxyCodeLine{00091\ \textcolor{stringliteral}{\ \ \ \ content\ is\ returned.\ Otherwise,\ it\ returns\ \`{}None\`{}.}}
+\DoxyCodeLine{00092\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00093\ \textcolor{stringliteral}{\ \ \ \ @param\ pdf\_path:\ The\ path\ to\ the\ PDF\ file\ to\ be\ searched.\ Must\ be\ a\ valid\ path\ to\ a\ readable\ file.}}
+\DoxyCodeLine{00094\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00095\ \textcolor{stringliteral}{\ \ \ \ @returns\ Optional[int]:\ The\ position\ (byte\ offset)\ of\ the\ signature\ content\ if\ the\ placeholder\ is\ found,\ }}
+\DoxyCodeLine{00096\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ or\ \`{}None\`{}\ if\ the\ placeholder\ is\ not\ found.}}
+\DoxyCodeLine{00097\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00098\ \textcolor{stringliteral}{\ \ \ \ @raises\ FileNotFoundError:\ If\ the\ specified\ PDF\ file\ cannot\ be\ found\ or\ opened.}}
+\DoxyCodeLine{00099\ \textcolor{stringliteral}{\ \ \ \ @raises\ IOError:\ If\ an\ error\ occurs\ while\ reading\ the\ file.}}
+\DoxyCodeLine{00100\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00101\ \textcolor{stringliteral}{\ \ \ \ @example}}
+\DoxyCodeLine{00102\ \textcolor{stringliteral}{\ \ \ \ \#\ Example\ usage\ of\ find\_signature:}}
+\DoxyCodeLine{00103\ \textcolor{stringliteral}{\ \ \ \ pdf\_path\ =\ "{}example\_with\_placeholder.pdf"{}}}
+\DoxyCodeLine{00104\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00105\ \textcolor{stringliteral}{\ \ \ \ try:}}
+\DoxyCodeLine{00106\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ signature\_position\ =\ find\_signature(pdf\_path)}}
+\DoxyCodeLine{00107\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ if\ signature\_position\ is\ not\ None:}}
+\DoxyCodeLine{00108\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ print(f"{}Signature\ placeholder\ found\ at\ byte\ offset:\ \{signature\_position\}"{})}}
+\DoxyCodeLine{00109\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ else:}}
+\DoxyCodeLine{00110\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ print("{}No\ signature\ placeholder\ found\ in\ the\ PDF."{})}}
+\DoxyCodeLine{00111\ \textcolor{stringliteral}{\ \ \ \ except\ Exception\ as\ e:}}
+\DoxyCodeLine{00112\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ print(f"{}An\ error\ occurred:\ \{e\}"{})}}
+\DoxyCodeLine{00113\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keyword}{with}\ open(pdf\_path,\ \textcolor{stringliteral}{"{}rb"{}})\ \textcolor{keyword}{as}\ f:}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ pattern\ =\ b\textcolor{stringliteral}{"{}/Type\ /BskSignature\(\backslash\)n/Contents\ ("{}}}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ position\ =\ f.read().find(pattern)}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ position\ !=\ -\/1:}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ position+=len(pattern)}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \ \ print(f\textcolor{stringliteral}{"{}Placeholder:\ \{position\}"{}})}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ position}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \ \ print(\textcolor{stringliteral}{"{}Placeholder\ not\ found."{}})}
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{None}}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \textcolor{keyword}{def\ }get\_signature(pdf\_path:\ str,\ position:\ int,\ signature\_length:\ int)\ -\/>\ str:}
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}!}}
+\DoxyCodeLine{00128\ \textcolor{stringliteral}{\ \ \ \ Extracts\ the\ signature\ data\ from\ a\ PDF\ file\ at\ a\ specified\ position.}}
+\DoxyCodeLine{00129\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00130\ \textcolor{stringliteral}{\ \ \ \ This\ function\ reads\ a\ specified\ number\ of\ bytes\ starting\ from\ a\ given\ position\ }}
+\DoxyCodeLine{00131\ \textcolor{stringliteral}{\ \ \ \ in\ a\ PDF\ file\ and\ decodes\ it\ into\ a\ string\ representing\ the\ signature\ data.}}
+\DoxyCodeLine{00132\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00133\ \textcolor{stringliteral}{\ \ \ \ @param\ pdf\_path:\ The\ path\ to\ the\ PDF\ file.\ Must\ be\ a\ valid\ path\ to\ a\ readable\ PDF\ file.}}
+\DoxyCodeLine{00134\ \textcolor{stringliteral}{\ \ \ \ @param\ position:\ The\ byte\ offset\ where\ the\ signature\ data\ begins.\ Must\ be\ a\ valid\ position\ within\ the\ file.}}
+\DoxyCodeLine{00135\ \textcolor{stringliteral}{\ \ \ \ @param\ signature\_length:\ The\ number\ of\ bytes\ to\ read\ for\ the\ signature\ data.}}
+\DoxyCodeLine{00136\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00137\ \textcolor{stringliteral}{\ \ \ \ @returns\ str:\ The\ decoded\ signature\ data\ as\ a\ string.}}
+\DoxyCodeLine{00138\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00139\ \textcolor{stringliteral}{\ \ \ \ @raises\ FileNotFoundError:\ If\ the\ specified\ PDF\ file\ cannot\ be\ found\ or\ opened.}}
+\DoxyCodeLine{00140\ \textcolor{stringliteral}{\ \ \ \ @raises\ ValueError:\ If\ the\ position\ or\ signature\ length\ is\ invalid.}}
+\DoxyCodeLine{00141\ \textcolor{stringliteral}{\ \ \ \ @raises\ UnicodeDecodeError:\ If\ the\ read\ bytes\ cannot\ be\ decoded\ into\ a\ string.}}
+\DoxyCodeLine{00142\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00143\ \textcolor{stringliteral}{\ \ \ \ @example}}
+\DoxyCodeLine{00144\ \textcolor{stringliteral}{\ \ \ \ \#\ Example\ usage\ of\ get\_signature:}}
+\DoxyCodeLine{00145\ \textcolor{stringliteral}{\ \ \ \ pdf\_path\ =\ "{}example\_with\_placeholder.pdf"{}}}
+\DoxyCodeLine{00146\ \textcolor{stringliteral}{\ \ \ \ position\ =\ 1500\ \ \#\ Position\ of\ the\ signature\ in\ the\ file}}
+\DoxyCodeLine{00147\ \textcolor{stringliteral}{\ \ \ \ signature\_length\ =\ 256\ \ \#\ Length\ of\ the\ signature\ in\ bytes}}
+\DoxyCodeLine{00148\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00149\ \textcolor{stringliteral}{\ \ \ \ try:}}
+\DoxyCodeLine{00150\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ signature\ =\ get\_signature(pdf\_path,\ position,\ signature\_length)}}
+\DoxyCodeLine{00151\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ print(f"{}Extracted\ signature:\ \{signature\}"{})}}
+\DoxyCodeLine{00152\ \textcolor{stringliteral}{\ \ \ \ except\ Exception\ as\ e:}}
+\DoxyCodeLine{00153\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ print(f"{}An\ error\ occurred:\ \{e\}"{})}}
+\DoxyCodeLine{00154\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{keyword}{with}\ open(pdf\_path,\ \textcolor{stringliteral}{"{}rb"{}})\ \textcolor{keyword}{as}\ f:}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ f.seek(position)}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ signature\_data\ =\ f.read(signature\_length)}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ signature\_data.decode()}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ \textcolor{keyword}{def\ }calculate\_sha256(file\_path:\ str,\ start\_position:\ int,\ length\_of\_section:\ int)\ -\/>\ str:}
+\DoxyCodeLine{00162\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}!}}
+\DoxyCodeLine{00163\ \textcolor{stringliteral}{\ \ \ \ Calculates\ the\ SHA-\/256\ hash\ of\ a\ file\ excluding\ a\ specific\ section.}}
+\DoxyCodeLine{00164\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00165\ \textcolor{stringliteral}{\ \ \ \ This\ function\ computes\ the\ SHA-\/256\ hash\ of\ a\ file,\ omitting\ a\ specified\ section\ }}
+\DoxyCodeLine{00166\ \textcolor{stringliteral}{\ \ \ \ defined\ by\ its\ starting\ position\ and\ length.\ It\ reads\ the\ file\ in\ two\ parts:\ }}
+\DoxyCodeLine{00167\ \textcolor{stringliteral}{\ \ \ \ before\ and\ after\ the\ excluded\ section,\ and\ concatenates\ the\ remaining\ data\ to\ }}
+\DoxyCodeLine{00168\ \textcolor{stringliteral}{\ \ \ \ calculate\ the\ hash.}}
+\DoxyCodeLine{00169\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00170\ \textcolor{stringliteral}{\ \ \ \ @param\ file\_path:\ The\ path\ to\ the\ file\ to\ hash.\ Must\ be\ a\ valid\ path\ to\ a\ readable\ file.}}
+\DoxyCodeLine{00171\ \textcolor{stringliteral}{\ \ \ \ @param\ start\_position:\ The\ byte\ offset\ where\ the\ excluded\ section\ begins.\ Must\ be\ within\ the\ file's\ length.}}
+\DoxyCodeLine{00172\ \textcolor{stringliteral}{\ \ \ \ @param\ length\_of\_section:\ The\ number\ of\ bytes\ to\ exclude\ from\ the\ hash\ computation.}}
+\DoxyCodeLine{00173\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00174\ \textcolor{stringliteral}{\ \ \ \ @returns\ str:\ The\ computed\ SHA-\/256\ hash\ as\ a\ hexadecimal\ string.}}
+\DoxyCodeLine{00175\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00176\ \textcolor{stringliteral}{\ \ \ \ @raises\ FileNotFoundError:\ If\ the\ specified\ file\ cannot\ be\ found\ or\ opened.}}
+\DoxyCodeLine{00177\ \textcolor{stringliteral}{\ \ \ \ @raises\ ValueError:\ If\ the\ start\ position\ or\ section\ length\ is\ invalid.}}
+\DoxyCodeLine{00178\ \textcolor{stringliteral}{\ \ \ \ @raises\ IOError:\ If\ an\ error\ occurs\ while\ reading\ the\ file.}}
+\DoxyCodeLine{00179\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00180\ \textcolor{stringliteral}{\ \ \ \ @example}}
+\DoxyCodeLine{00181\ \textcolor{stringliteral}{\ \ \ \ \#\ Example\ usage\ of\ calculate\_sha256:}}
+\DoxyCodeLine{00182\ \textcolor{stringliteral}{\ \ \ \ file\_path\ =\ "{}example\_file.bin"{}}}
+\DoxyCodeLine{00183\ \textcolor{stringliteral}{\ \ \ \ start\_position\ =\ 100}}
+\DoxyCodeLine{00184\ \textcolor{stringliteral}{\ \ \ \ length\_of\_section\ =\ 50}}
+\DoxyCodeLine{00185\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00186\ \textcolor{stringliteral}{\ \ \ \ try:}}
+\DoxyCodeLine{00187\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ hash\_value\ =\ calculate\_sha256(file\_path,\ start\_position,\ length\_of\_section)}}
+\DoxyCodeLine{00188\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ print(f"{}SHA-\/256\ hash\ excluding\ section:\ \{hash\_value\}"{})}}
+\DoxyCodeLine{00189\ \textcolor{stringliteral}{\ \ \ \ except\ Exception\ as\ e:}}
+\DoxyCodeLine{00190\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ print(f"{}An\ error\ occurred:\ \{e\}"{})}}
+\DoxyCodeLine{00191\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{00192\ \ \ \ \ \textcolor{keyword}{with}\ open(file\_path,\ \textcolor{stringliteral}{"{}rb"{}})\ \textcolor{keyword}{as}\ file:}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ file.seek(0)}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ data\_before\ =\ file.read(start\_position)}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ file.seek(start\_position\ +\ length\_of\_section)}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ data\_after\ =\ file.read()}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ remaining\_data\ =\ data\_before\ +\ data\_after}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ sha256\_hash\ =\ hashlib.sha256()}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ sha256\_hash.update(remaining\_data)}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ sha256\_hash.hexdigest()}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00202\ \textcolor{keyword}{def\ }sign\_hash\_with\_private\_key(hash\_value:\ str,\ private\_key\_path:\ str)\ -\/>\ str:}
+\DoxyCodeLine{00203\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}!}}
+\DoxyCodeLine{00204\ \textcolor{stringliteral}{\ \ \ \ Signs\ a\ hash\ value\ using\ a\ private\ key.}}
+\DoxyCodeLine{00205\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00206\ \textcolor{stringliteral}{\ \ \ \ This\ function\ takes\ a\ hash\ value\ and\ a\ private\ key,\ and\ generates\ a\ signature\ for\ the\ hash\ }}
+\DoxyCodeLine{00207\ \textcolor{stringliteral}{\ \ \ \ using\ the\ RSA\ private\ key.\ The\ signature\ is\ returned\ as\ a\ hexadecimal\ string.}}
+\DoxyCodeLine{00208\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00209\ \textcolor{stringliteral}{\ \ \ \ @param\ hash\_value:\ The\ hash\ value\ to\ sign,\ represented\ as\ a\ hexadecimal\ string.}}
+\DoxyCodeLine{00210\ \textcolor{stringliteral}{\ \ \ \ @param\ private\_key\_path:\ Path\ to\ the\ private\ key\ file\ in\ PEM\ format.\ }}
+\DoxyCodeLine{00211\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ The\ file\ must\ be\ accessible\ and\ contain\ a\ valid\ RSA\ private\ key.}}
+\DoxyCodeLine{00212\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00213\ \textcolor{stringliteral}{\ \ \ \ @returns\ str:\ The\ generated\ signature\ as\ a\ hexadecimal\ string.}}
+\DoxyCodeLine{00214\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00215\ \textcolor{stringliteral}{\ \ \ \ @raises\ FileNotFoundError:\ If\ the\ private\ key\ file\ cannot\ be\ found\ or\ opened.}}
+\DoxyCodeLine{00216\ \textcolor{stringliteral}{\ \ \ \ @raises\ ValueError:\ If\ the\ hash\ value\ is\ invalid\ or\ the\ private\ key\ is\ not\ in\ the\ correct\ format.}}
+\DoxyCodeLine{00217\ \textcolor{stringliteral}{\ \ \ \ @raises\ Exception:\ If\ signing\ the\ hash\ fails\ due\ to\ any\ other\ reason.}}
+\DoxyCodeLine{00218\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00219\ \textcolor{stringliteral}{\ \ \ \ @example}}
+\DoxyCodeLine{00220\ \textcolor{stringliteral}{\ \ \ \ \#\ Example\ usage\ of\ sign\_hash\_with\_private\_key:}}
+\DoxyCodeLine{00221\ \textcolor{stringliteral}{\ \ \ \ hash\_value\ =\ "{}9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"{}}}
+\DoxyCodeLine{00222\ \textcolor{stringliteral}{\ \ \ \ private\_key\_path\ =\ "{}private\_key.pem"{}}}
+\DoxyCodeLine{00223\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00224\ \textcolor{stringliteral}{\ \ \ \ try:}}
+\DoxyCodeLine{00225\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ signature\ =\ sign\_hash\_with\_private\_key(hash\_value,\ private\_key\_path)}}
+\DoxyCodeLine{00226\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ print(f"{}Generated\ signature:\ \{signature\}"{})}}
+\DoxyCodeLine{00227\ \textcolor{stringliteral}{\ \ \ \ except\ Exception\ as\ e:}}
+\DoxyCodeLine{00228\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ print(f"{}An\ error\ occurred:\ \{e\}"{})}}
+\DoxyCodeLine{00229\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{00230\ \ \ \ \ \textcolor{keyword}{with}\ open(private\_key\_path,\ \textcolor{stringliteral}{'rb'})\ \textcolor{keyword}{as}\ key\_file:}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ private\_key\ =\ serialization.load\_pem\_private\_key(}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ \ \ \ \ key\_file.read(),}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \ \ \ \ password=\textcolor{keywordtype}{None},}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \ \ \ \ backend=default\_backend()}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{00236\ \ \ \ \ signature\ =\ private\_key.sign(}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ bytes.fromhex(hash\_value),}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ padding.PKCS1v15(),}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ hashes.SHA256()\ }
+\DoxyCodeLine{00240\ \ \ \ \ )}
+\DoxyCodeLine{00241\ \ \ \ }
+\DoxyCodeLine{00242\ \ \ \ \ \textcolor{keywordflow}{return}\ signature.hex()}
+\DoxyCodeLine{00243\ }
+\DoxyCodeLine{00244\ }
+\DoxyCodeLine{00245\ \textcolor{keyword}{def\ }verify\_signature\_with\_public\_key(hash\_value:\ str,\ signature:\ str,\ public\_key\_path:\ str)\ -\/>\ bool:\ }
+\DoxyCodeLine{00246\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}!}}
+\DoxyCodeLine{00247\ \textcolor{stringliteral}{\ \ \ \ Verifies\ a\ signature\ using\ a\ public\ key.}}
+\DoxyCodeLine{00248\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00249\ \textcolor{stringliteral}{\ \ \ \ This\ function\ takes\ a\ hash\ value,\ a\ signature,\ and\ a\ public\ key\ to\ verify\ the\ authenticity\ }}
+\DoxyCodeLine{00250\ \textcolor{stringliteral}{\ \ \ \ of\ the\ signature.\ It\ returns\ \`{}True\`{}\ if\ the\ signature\ is\ valid,\ otherwise\ returns\ \`{}False\`{}.}}
+\DoxyCodeLine{00251\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00252\ \textcolor{stringliteral}{\ \ \ \ @param\ hash\_value:\ The\ original\ hash\ value,\ represented\ as\ a\ hexadecimal\ string.}}
+\DoxyCodeLine{00253\ \textcolor{stringliteral}{\ \ \ \ @param\ signature:\ The\ signature\ to\ verify,\ represented\ as\ a\ hexadecimal\ string.}}
+\DoxyCodeLine{00254\ \textcolor{stringliteral}{\ \ \ \ @param\ public\_key\_path:\ Path\ to\ the\ public\ key\ file\ in\ PEM\ format.\ The\ file\ must\ be\ }}
+\DoxyCodeLine{00255\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ accessible\ and\ contain\ a\ valid\ RSA\ public\ key.}}
+\DoxyCodeLine{00256\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00257\ \textcolor{stringliteral}{\ \ \ \ @returns\ bool:\ \`{}True\`{}\ if\ the\ signature\ is\ valid,\ \`{}False\`{}\ otherwise.}}
+\DoxyCodeLine{00258\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00259\ \textcolor{stringliteral}{\ \ \ \ @raises\ FileNotFoundError:\ If\ the\ public\ key\ file\ cannot\ be\ found\ or\ opened.}}
+\DoxyCodeLine{00260\ \textcolor{stringliteral}{\ \ \ \ @raises\ ValueError:\ If\ the\ hash\ value\ or\ signature\ is\ invalid,\ or\ the\ public\ key\ is\ not\ }}
+\DoxyCodeLine{00261\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in\ the\ correct\ format.}}
+\DoxyCodeLine{00262\ \textcolor{stringliteral}{\ \ \ \ @raises\ Exception:\ If\ verification\ fails\ for\ any\ other\ reason.}}
+\DoxyCodeLine{00263\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00264\ \textcolor{stringliteral}{\ \ \ \ @example}}
+\DoxyCodeLine{00265\ \textcolor{stringliteral}{\ \ \ \ \#\ Example\ usage\ of\ verify\_signature\_with\_public\_key:}}
+\DoxyCodeLine{00266\ \textcolor{stringliteral}{\ \ \ \ hash\_value\ =\ "{}9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"{}}}
+\DoxyCodeLine{00267\ \textcolor{stringliteral}{\ \ \ \ signature\ =\ "{}b3f2a1e6f1a2c94f88e45d067e76c58abefbeee44c8a8453c817bd7a4b8b0a6e"{}}}
+\DoxyCodeLine{00268\ \textcolor{stringliteral}{\ \ \ \ public\_key\_path\ =\ "{}public\_key.pem"{}}}
+\DoxyCodeLine{00269\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00270\ \textcolor{stringliteral}{\ \ \ \ try:}}
+\DoxyCodeLine{00271\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ is\_valid\ =\ verify\_signature\_with\_public\_key(hash\_value,\ signature,\ public\_key\_path)}}
+\DoxyCodeLine{00272\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ if\ is\_valid:}}
+\DoxyCodeLine{00273\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ print("{}Signature\ is\ valid."{})}}
+\DoxyCodeLine{00274\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ else:}}
+\DoxyCodeLine{00275\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ print("{}Signature\ is\ invalid."{})}}
+\DoxyCodeLine{00276\ \textcolor{stringliteral}{\ \ \ \ except\ Exception\ as\ e:}}
+\DoxyCodeLine{00277\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ print(f"{}An\ error\ occurred:\ \{e\}"{})}}
+\DoxyCodeLine{00278\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{00279\ \ \ \ \ \textcolor{keyword}{with}\ open(public\_key\_path,\ \textcolor{stringliteral}{'rb'})\ \textcolor{keyword}{as}\ key\_file:}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ public\_key\ =\ serialization.load\_pem\_public\_key(}
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ \ \ \ \ key\_file.read(),}
+\DoxyCodeLine{00282\ \ \ \ \ \ \ \ \ \ \ \ \ backend=default\_backend()}
+\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{00284\ \ \ \ \ \textcolor{keywordflow}{try}:}
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ public\_key.verify(}
+\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ \ \ \ \ bytes.fromhex(signature),}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \ \ \ \ bytes.fromhex(hash\_value),}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \ \ \ \ padding.PKCS1v15(),}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ \ \ \ \ hashes.SHA256()}
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{True}}
+\DoxyCodeLine{00292\ \ \ \ \ \textcolor{keywordflow}{except}\ Exception\ \textcolor{keyword}{as}\ e:}
+\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ print(f\textcolor{stringliteral}{"{}Verification\ failed:\ \{e\}"{}})}
+\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{False}}
+\DoxyCodeLine{00295\ \ \ \ \ }
+\DoxyCodeLine{00296\ }
+\DoxyCodeLine{00297\ }
+\DoxyCodeLine{00298\ }
+\DoxyCodeLine{00299\ SIGNATURE\_LENGTH\ =\ 4096}
+\DoxyCodeLine{00300\ SIGNATURE\_LENGTH\_BYTES\ =\ SIGNATURE\_LENGTH\ //\ 8}
+\DoxyCodeLine{00301\ SIGNATURE\_LENGTH\_HEX\ =\ SIGNATURE\_LENGTH\_BYTES\ *\ 2}
+\DoxyCodeLine{00302\ }
+\DoxyCodeLine{00303\ \textcolor{keyword}{def\ }sign\_pdf\_using\_private\_key(input\_pdf\_path:\ str,\ output\_pdf\_path:\ str,\ private\_key\_path:\ str)\ -\/>\ \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{00304\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}!}}
+\DoxyCodeLine{00305\ \textcolor{stringliteral}{\ \ \ \ Signs\ a\ PDF\ file\ by\ inserting\ a\ digital\ signature\ using\ a\ private\ key.}}
+\DoxyCodeLine{00306\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00307\ \textcolor{stringliteral}{\ \ \ \ This\ function\ copies\ the\ input\ PDF\ to\ the\ output\ path,\ checks\ if\ a\ signature\ placeholder\ }}
+\DoxyCodeLine{00308\ \textcolor{stringliteral}{\ \ \ \ exists,\ and\ if\ not,\ creates\ one.\ It\ then\ calculates\ the\ SHA-\/256\ hash\ of\ the\ PDF\ excluding\ }}
+\DoxyCodeLine{00309\ \textcolor{stringliteral}{\ \ \ \ the\ placeholder\ section,\ signs\ this\ hash\ with\ the\ specified\ private\ key,\ and\ replaces\ }}
+\DoxyCodeLine{00310\ \textcolor{stringliteral}{\ \ \ \ the\ placeholder\ in\ the\ output\ PDF\ with\ the\ generated\ signature.}}
+\DoxyCodeLine{00311\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00312\ \textcolor{stringliteral}{\ \ \ \ @param\ input\_pdf\_path:\ Path\ to\ the\ original\ PDF\ file\ to\ be\ signed.}}
+\DoxyCodeLine{00313\ \textcolor{stringliteral}{\ \ \ \ @param\ output\_pdf\_path:\ Path\ where\ the\ signed\ PDF\ will\ be\ saved.}}
+\DoxyCodeLine{00314\ \textcolor{stringliteral}{\ \ \ \ @param\ private\_key\_path:\ Path\ to\ the\ private\ key\ file\ (PEM\ format)\ used\ for\ signing.}}
+\DoxyCodeLine{00315\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00316\ \textcolor{stringliteral}{\ \ \ \ @returns\ None}}
+\DoxyCodeLine{00317\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00318\ \textcolor{stringliteral}{\ \ \ \ @raises\ FileNotFoundError:\ If\ any\ of\ the\ input\ files\ (PDF\ or\ private\ key)\ cannot\ be\ found.}}
+\DoxyCodeLine{00319\ \textcolor{stringliteral}{\ \ \ \ @raises\ ValueError:\ If\ signature\ placeholder\ is\ not\ found\ or\ signature\ length\ is\ invalid.}}
+\DoxyCodeLine{00320\ \textcolor{stringliteral}{\ \ \ \ @raises\ Exception:\ For\ other\ errors\ such\ as\ issues\ with\ hashing,\ signing,\ or\ file\ I/O.}}
+\DoxyCodeLine{00321\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00322\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{00323\ \ \ \ \ shutil.copy(input\_pdf\_path,\ output\_pdf\_path)\ \ \ }
+\DoxyCodeLine{00324\ \ \ \ \ if(find\_signature(output\_pdf\_path)\ \textcolor{keywordflow}{is}\ \textcolor{keywordflow}{not}\ \textcolor{keywordtype}{None}):}
+\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ print(\textcolor{stringliteral}{"{}Signature\ already\ exists."{}})}
+\DoxyCodeLine{00326\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ create\_pdf\_placeholder(input\_pdf\_path,\ output\_pdf\_path,\ SIGNATURE\_LENGTH\_HEX)}
+\DoxyCodeLine{00328\ \ \ \ \ signature\_positon\ =\ find\_signature(output\_pdf\_path)}
+\DoxyCodeLine{00329\ }
+\DoxyCodeLine{00330\ \ \ \ \ hash\ =\ calculate\_sha256(output\_pdf\_path,\ signature\_positon,\ SIGNATURE\_LENGTH\_HEX)}
+\DoxyCodeLine{00331\ \ \ \ \ print(f\textcolor{stringliteral}{"{}Hash\ value(\{len(hash)\}):\ \{hash\}"{}})}
+\DoxyCodeLine{00332\ \ \ \ \ signature\ =\ sign\_hash\_with\_private\_key(hash,\ private\_key\_path)}
+\DoxyCodeLine{00333\ \ \ \ \ print(f\textcolor{stringliteral}{"{}Signature(\{len(signature)\}):\ \{signature\}"{}})}
+\DoxyCodeLine{00334\ }
+\DoxyCodeLine{00335\ \ \ \ \ replace\_bytes\_at\_offset(output\_pdf\_path,\ signature\_positon,\ signature.encode(),\ output\_pdf\_path)}
+\DoxyCodeLine{00336\ \ \ \ \ print(f\textcolor{stringliteral}{"{}Signed\ PDF:\ \{input\_pdf\_path\}\ to:\ \{output\_pdf\_path\}"{}})}
+\DoxyCodeLine{00337\ }
+\DoxyCodeLine{00338\ \textcolor{keyword}{def\ }verify\_signed\_pdf(input\_pdf\_path:\ str,\ public\_key\_path:\ str)\ -\/>\ bool:}
+\DoxyCodeLine{00339\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}!}}
+\DoxyCodeLine{00340\ \textcolor{stringliteral}{\ \ \ \ @brief\ Verifies\ the\ digital\ signature\ of\ a\ signed\ PDF\ file\ using\ a\ public\ key.}}
+\DoxyCodeLine{00341\ \textcolor{stringliteral}{\ \ \ \ This\ function\ locates\ the\ signature\ placeholder\ in\ the\ PDF,\ extracts\ the\ signature,}}
+\DoxyCodeLine{00342\ \textcolor{stringliteral}{\ \ \ \ calculates\ the\ SHA-\/256\ hash\ of\ the\ PDF\ excluding\ the\ signature\ section,\ and\ verifies}}
+\DoxyCodeLine{00343\ \textcolor{stringliteral}{\ \ \ \ the\ signature\ against\ the\ hash\ using\ the\ provided\ public\ key.}}
+\DoxyCodeLine{00344\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00345\ \textcolor{stringliteral}{\ \ \ \ @param\ input\_pdf\_path:\ Path\ to\ the\ signed\ PDF\ file\ to\ verify.}}
+\DoxyCodeLine{00346\ \textcolor{stringliteral}{\ \ \ \ @param\ public\_key\_path:\ Path\ to\ the\ public\ key\ file\ (PEM\ format)\ used\ for\ verification.}}
+\DoxyCodeLine{00347\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00348\ \textcolor{stringliteral}{\ \ \ \ @returns\ bool:\ Returns\ True\ if\ the\ signature\ is\ valid,\ False\ otherwise.}}
+\DoxyCodeLine{00349\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{00350\ \textcolor{stringliteral}{\ \ \ \ @raises\ FileNotFoundError:\ If\ the\ PDF\ file\ or\ public\ key\ file\ cannot\ be\ found.}}
+\DoxyCodeLine{00351\ \textcolor{stringliteral}{\ \ \ \ @raises\ ValueError:\ If\ the\ signature\ placeholder\ is\ missing\ or\ signature\ length\ is\ invalid.}}
+\DoxyCodeLine{00352\ \textcolor{stringliteral}{\ \ \ \ @raises\ Exception:\ For\ errors\ occurring\ during\ hashing,\ signature\ extraction,\ or\ verification.}}
+\DoxyCodeLine{00353\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{00354\ \ \ \ \ hash\ =\ calculate\_sha256(input\_pdf\_path,\ signature\_positon,\ SIGNATURE\_LENGTH\_HEX)}
+\DoxyCodeLine{00355\ \ \ \ \ signature\ =\ get\_signature(input\_pdf\_path,\ signature\_positon,\ SIGNATURE\_LENGTH\_HEX)}
+\DoxyCodeLine{00356\ \ \ \ \ print(f\textcolor{stringliteral}{"{}Hash\ value(\{len(hash)\}):\ \{hash\}"{}})}
+\DoxyCodeLine{00357\ \ \ \ \ print(f\textcolor{stringliteral}{"{}Signature(\{len(signature)\}):\ \{signature\}"{}})}
+\DoxyCodeLine{00358\ }
+\DoxyCodeLine{00359\ \ \ \ \ verified\ =\ verify\_signature\_with\_public\_key(hash,\ signature,\ public\_key\_path)}
+\DoxyCodeLine{00360\ \ \ \ \ print(f\textcolor{stringliteral}{"{}Signature\ verified:\ \{input\_pdf\_path\}\ with:\ \{public\_key\_path\}"{}})}
+\DoxyCodeLine{00361\ \ \ \ \ \textcolor{keywordflow}{return}\ verified}
+\DoxyCodeLine{00362\ }
+\DoxyCodeLine{00363\ }
+\DoxyCodeLine{00364\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacemain}{main}}():}
+\DoxyCodeLine{00365\ \ \ \ \ parser\ =\ argparse.ArgumentParser(description=\textcolor{stringliteral}{"{}Aplikacja\ do\ podpisywania\ i\ weryfikacji\ plików\ PDF"{}})}
+\DoxyCodeLine{00366\ \ \ \ \ parser.add\_argument(\textcolor{stringliteral}{'-\/-\/verify'},\ help=\textcolor{stringliteral}{"{}Weryfikacja\ podpisu"{}},\ nargs=2,\ metavar=(\textcolor{stringliteral}{'input'},\ \textcolor{stringliteral}{'public\_key'}))}
+\DoxyCodeLine{00367\ \ \ \ \ parser.add\_argument(\textcolor{stringliteral}{'-\/-\/sign'},\ help=\textcolor{stringliteral}{"{}Podpisywanie\ pliku"{}},\ nargs=3,\ metavar=(\textcolor{stringliteral}{'input'},\ \textcolor{stringliteral}{'output'},\ \textcolor{stringliteral}{'private\_key'}))}
+\DoxyCodeLine{00368\ \ \ \ \ args\ =\ parser.parse\_args()}
+\DoxyCodeLine{00369\ }
+\DoxyCodeLine{00370\ \ \ \ \ \textcolor{keywordflow}{if}\ args.verify:}
+\DoxyCodeLine{00371\ \ \ \ \ \ \ \ \ input\_path,\ public\_key\_path\ =\ args.verify}
+\DoxyCodeLine{00372\ \ \ \ \ \ \ \ \ v\ =\ verify\_signed\_pdf(input\_path,\ public\_key\_path)}
+\DoxyCodeLine{00373\ \ \ \ \ \ \ \ \ print(f\textcolor{stringliteral}{"{}Weryfikacja\ podpisu\ zakończona.\ Plik:\ \{input\_path\},\ Klucz\ publiczny:\ \{public\_key\_path\}.\ Wynik:\ \{v\}"{}})}
+\DoxyCodeLine{00374\ }
+\DoxyCodeLine{00375\ \ \ \ \ \textcolor{keywordflow}{elif}\ args.sign:}
+\DoxyCodeLine{00376\ \ \ \ \ \ \ \ \ input\_path,\ output\_path,\ private\_key\_path\ =\ args.sign}
+\DoxyCodeLine{00377\ \ \ \ \ \ \ \ \ sign\_pdf\_using\_private\_key(input\_path,\ output\_path,\ private\_key\_path)}
+\DoxyCodeLine{00378\ \ \ \ \ \ \ \ \ print(f\textcolor{stringliteral}{"{}Podpisano\ plik\ PDF:\ \{input\_path\}\ i\ zapisano\ jako:\ \{output\_path\}"{}})}
+\DoxyCodeLine{00379\ }
+\DoxyCodeLine{00380\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{00381\ \ \ \ \ \ \ \ \ print(\textcolor{stringliteral}{"{}Brak\ wymaganych\ argumentów.\ Użyj\ -\/-\/help,\ aby\ zobaczyć\ dostępne\ opcje."{}})}
+\DoxyCodeLine{00382\ }
+\DoxyCodeLine{00383\ \textcolor{keywordflow}{if}\ \_\_name\_\_\ ==\ \textcolor{stringliteral}{'\_\_main\_\_'}:}
+\DoxyCodeLine{00384\ \ \ \ \ \mbox{\hyperlink{namespacemain}{main}}()}
+
+\end{DoxyCodeInclude}
+ 

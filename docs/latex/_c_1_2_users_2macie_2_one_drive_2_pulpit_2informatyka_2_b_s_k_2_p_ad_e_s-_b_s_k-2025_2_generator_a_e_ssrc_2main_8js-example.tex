@@ -1,0 +1,144 @@
+\doxysection{C\+:/\+Users/macie/\+One\+Drive/\+Pulpit/informatyka/\+BSK/\+PAd\+ES-\/\+BSK-\/2025/\+Generator\+AESsrc/main.\+js}
+\hypertarget{_c_1_2_users_2macie_2_one_drive_2_pulpit_2informatyka_2_b_s_k_2_p_ad_e_s-_b_s_k-2025_2_generator_a_e_ssrc_2main_8js-example}{}\label{_c_1_2_users_2macie_2_one_drive_2_pulpit_2informatyka_2_b_s_k_2_p_ad_e_s-_b_s_k-2025_2_generator_a_e_ssrc_2main_8js-example}Generates an RSA key pair, encrypts the private key, and saves the keys to disk.
+
+This function creates a 4096-\/bit RSA key pair, encrypts the private key using a user-\/provided PIN, and saves both the public and encrypted private keys as files on the specified disk path.
+
+@function 
+\begin{DoxyParams}{Parameters}
+{\em \{string\}} & disk\+Path -\/ The directory path where the RSA key files will be saved. Must be a valid and writable directory path. \\
+\hline
+{\em \{string\}} & user\+PIN -\/ A PIN provided by the user to encrypt the private key. Must be a non-\/empty string. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\{Promise$<$\+Object$>$\} A promise that resolves to an object containing\+:
+\begin{DoxyItemize}
+\item {\ttfamily public\+Key\+Path} (string)\+: The file path of the saved public key.
+\item {\ttfamily private\+Key\+Path} (string)\+: The file path of the saved encrypted private key. 
+\end{DoxyItemize}
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em \{\+Error\}} & If key generation, encryption, or file writing fails.\\
+\hline
+\end{DoxyExceptions}
+const disk\+Path = \textquotesingle{}/path/to/keys\textquotesingle{}; const user\+PIN = \textquotesingle{}1234\textquotesingle{};
+
+generate\+RSAKeys(disk\+Path, user\+PIN) .then((\{ public\+Key\+Path, private\+Key\+Path \}) =\texorpdfstring{$>$}{>} \{ console.\+log(\textquotesingle{}Keys generated successfully\+:\textquotesingle{}); console.\+log(\textquotesingle{}Public Key\+:\textquotesingle{}, public\+Key\+Path); console.\+log(\textquotesingle{}Encrypted Private Key\+:\textquotesingle{}, private\+Key\+Path); \}) .catch((error) =\texorpdfstring{$>$}{>} \{ console.\+error(\textquotesingle{}Failed to generate keys\+:\textquotesingle{}, error.\+message); \});
+
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{keyword}{const}\ \{BrowserWindow,\ app,\ ipcMain\}\ =\ require(\textcolor{stringliteral}{'electron'})\textcolor{keyword}{}}
+\DoxyCodeLine{\textcolor{keyword}{const\ }\{exec\}\ =\ require(\textcolor{stringliteral}{'child\_process'});}
+\DoxyCodeLine{\textcolor{keyword}{const}\ \mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a1fdc7709faf62dce60620fb3f9d3453c}{path}}\ =\ require(\textcolor{stringliteral}{'path'});}
+\DoxyCodeLine{\textcolor{keyword}{const}\ \mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a2e47e1f004220675d0fa39b8255bd78f}{fs}}\ =\ require(\textcolor{stringliteral}{'fs'});}
+\DoxyCodeLine{\textcolor{keyword}{const}\ \mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a607091759c690210419aa15f07f84b9f}{forge}}\ =\ require(\textcolor{stringliteral}{'node-\/forge'});}
+\DoxyCodeLine{\textcolor{keyword}{const}\ \mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a44d29f599486b46f8b3f74e5ff5e8b94}{crypto}}\ =require(\textcolor{stringliteral}{'crypto'});}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{const}\ \mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_afd68f54fec210ddd90d8fb51baff9e85}{createWindow}}\ =\ ()=>\{}
+\DoxyCodeLine{\ \ \ \ \textcolor{keyword}{const}\ win\ =\ \textcolor{keyword}{new}\ BrowserWindow(\{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ width:800,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ height:600,\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ webPreferences:\{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ preload:\ \mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a1fdc7709faf62dce60620fb3f9d3453c}{path}}.join(\_\_dirname,\ \textcolor{stringliteral}{'preload.js'})}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \})}
+\DoxyCodeLine{\ \ \ \ win.loadFile(\textcolor{stringliteral}{"{}index.html"{}})}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{app.whenReady().then(()=>\{}
+\DoxyCodeLine{\ \ \ \ \mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_afd68f54fec210ddd90d8fb51baff9e85}{createWindow}}();}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{function}\ \mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a31546c094c42184a86101814f12f6276}{getAvailableDrives}}()\ \{}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{new}\ Promise((resolve,\ reject)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ exec(\textcolor{stringliteral}{'wmic\ logicaldisk\ get\ name'},\ (error,\ stdout)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (error)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ reject(error);}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ drives\ =\ stdout}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .split(\textcolor{charliteral}{'\(\backslash\)n'})}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .filter((line)\ =>\ line.includes(\textcolor{charliteral}{':'}))}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .map((drive)\ =>\ drive.trim());}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ resolve(drives);}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{\ \ \ \ \});}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{function}\ \mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a5880286a97e6ffca2d935d98ca1356f4}{generateRSAKeys}}(diskPath,\ userPIN)\ \{}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{new}\ Promise((resolve,\ reject)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ console.log(\textcolor{stringliteral}{'generateRSAKeys\ called\ with:'},\ \{\ diskPath,\ userPIN\ \});}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ keypair\ =\ \mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a607091759c690210419aa15f07f84b9f}{forge}}.pki.rsa.generateKeyPair(\{\ bits:\ 4096\ \});}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ publicKeyPem\ =\ \mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a607091759c690210419aa15f07f84b9f}{forge}}.pki.publicKeyToPem(keypair.publicKey);}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ privateKeyPem\ =\ \mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a607091759c690210419aa15f07f84b9f}{forge}}.pki.privateKeyToPem(keypair.privateKey);}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ aesKey\ =\ \mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a52190aae589c870c686f4f93cf41eb1d}{hashPIN}}(userPIN);}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ encrypted\ =\ \mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_aceec6da763423b4745e8f1485d699d45}{encryptWithAES}}(privateKeyPem,\ aesKey);}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ publicKeyPath\ =\ \mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a1fdc7709faf62dce60620fb3f9d3453c}{path}}.join(diskPath,\ \textcolor{stringliteral}{'rsa\_public\_key.pem'});}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ privateKeyPath\ =\ \mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a1fdc7709faf62dce60620fb3f9d3453c}{path}}.join(diskPath,\ \textcolor{stringliteral}{'rsa\_private\_key.pem'});}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a2e47e1f004220675d0fa39b8255bd78f}{fs}}.writeFileSync(publicKeyPath,\ publicKeyPem);}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ console.log(\textcolor{stringliteral}{"{}Type\ of\ encrypted"{}},\ typeof\ data)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!Buffer.isBuffer(encrypted))\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ \textcolor{keyword}{new}\ Error(\textcolor{stringliteral}{'Encryption\ failed.\ "{}encrypted"{}\ is\ not\ a\ Buffer.'});}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a2e47e1f004220675d0fa39b8255bd78f}{fs}}.writeFileSync(privateKeyPath,\ encrypted);}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ resolve(\{\ publicKeyPath,\ privateKeyPath\ \});}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{catch}\ (error)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ reject(error);}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \});}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{function}\ \mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a52190aae589c870c686f4f93cf41eb1d}{hashPIN}}(pin)\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(\textcolor{stringliteral}{'hashPIN\ called\ with:'},\ pin);}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{if}\ (!pin\ ||\ typeof\ pin\ !==\ \textcolor{stringliteral}{'string'})\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ \textcolor{keyword}{new}\ Error(\textcolor{stringliteral}{'Invalid\ PIN.\ Expected\ a\ non-\/empty\ string.'});}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a44d29f599486b46f8b3f74e5ff5e8b94}{crypto}}.createHash(\textcolor{stringliteral}{'sha256'}).update(pin,\ \textcolor{stringliteral}{'utf8'}).digest();}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{function}\ \mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_aceec6da763423b4745e8f1485d699d45}{encryptWithAES}}(data,\ aesKey)\ \{}
+\DoxyCodeLine{\ \ \ \ console.log(\textcolor{stringliteral}{'Type\ of\ data:'},\ typeof\ data);}
+\DoxyCodeLine{\ \ \ \ console.log(\textcolor{stringliteral}{'Type\ of\ aesKey:'},\ typeof\ aesKey);}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{if}\ (!aesKey\ ||\ aesKey.length\ !==\ 32)\ \{\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ \textcolor{keyword}{new}\ Error(\textcolor{stringliteral}{'Invalid\ AES\ key.\ Expected\ a\ 256-\/bit\ key.'});}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \textcolor{keyword}{const}\ cipher\ =\ \mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a44d29f599486b46f8b3f74e5ff5e8b94}{crypto}}.createCipheriv(\textcolor{stringliteral}{'aes-\/256-\/ecb'},\ aesKey,\ \textcolor{keyword}{null});\ }
+\DoxyCodeLine{\ \ \ \ cipher.setAutoPadding(\textcolor{keyword}{true});}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{try}\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ encrypted\ =\ Buffer.concat([cipher.update(data,\ \textcolor{stringliteral}{'utf8'}),\ cipher.final()]);}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ console.log(\textcolor{stringliteral}{'Type\ of\ encrypted:'},\ typeof\ encrypted);}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!Buffer.isBuffer(encrypted))\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ \textcolor{keyword}{new}\ Error(\textcolor{stringliteral}{'Encryption\ failed.\ "{}encrypted"{}\ is\ not\ a\ Buffer.'});}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ encrypted;}
+\DoxyCodeLine{\ \ \ \ \}\ \textcolor{keywordflow}{catch}\ (error)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ console.error(\textcolor{stringliteral}{'Encryption\ error:'},\ error);}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ error;}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+\DoxyCodeLine{ipcMain.handle(\textcolor{stringliteral}{'get-\/drives'},\ async\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \textcolor{keyword}{const}\ drives\ =\ await\ \mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a31546c094c42184a86101814f12f6276}{getAvailableDrives}}();}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{return}\ drives;}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{ipcMain.handle(\textcolor{stringliteral}{'generate-\/keys'},\ async\ (\_,\ diskPath,\ userPIN)\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{return}\ await\ \mbox{\hyperlink{_generator_a_e_ssrc_2main_8js_a5880286a97e6ffca2d935d98ca1356f4}{generateRSAKeys}}(diskPath,\ userPIN);}
+\DoxyCodeLine{\});}
+\DoxyCodeLine{}
+\DoxyCodeLine{app.on(\textcolor{stringliteral}{'window-\/all-\/closed'},\ ()\ =>\ \{}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{if}\ (process.platform\ !==\ \textcolor{stringliteral}{'darwin'})\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ app.quit();}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\});}
+
+\end{DoxyCodeInclude}
+ 
