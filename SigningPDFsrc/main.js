@@ -1,7 +1,8 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron')
 const { spawn } = require('child_process');
 const path = require('path');
-
+const crypto =require('crypto');
+const fs = require('fs');
 
 let win
 function createWindow() {
@@ -31,6 +32,47 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
+});
+
+
+
+//crypto
+
+
+function decryptWithAES(encryptedData, aesKey) {
+    if (!aesKey || aesKey.length !== 32) { 
+        throw new Error('Invalid AES key. Expected a 256-bit key.');
+    }
+    const decipher = crypto.createDecipheriv('aes-256-ecb', aesKey, null);
+    decipher.setAutoPadding(true);
+    try {
+        const decrypted = Buffer.concat([decipher.update(encryptedData), decipher.final()]);
+        console.log('Decrypted data:', decrypted.toString('utf8')); // Debug: Logs the decrypted data as a string
+        return decrypted.toString('utf8'); // Return decrypted data as a UTF-8 string
+    } catch (error) {
+        console.error('Decryption error:', error);
+        throw error;
+    }
+}
+
+function hashPIN(pin) {
+    console.log('hashPIN called with:', pin);
+    return crypto.createHash('sha256').update(pin, 'utf8').digest();
+}
+
+//custom endpoints
+ipcMain.handle('decrypt-private-key', async (event, privateKeyPath, pin) => {
+  console.log('Decrypting private key:', privateKeyPath, 'with PIN:', pin);
+
+  const tmpKeyPath = path.join(__dirname, 'app_files', 'prvt.pem');
+  const pinHash = hashPIN(pin);
+  const privateKeyContent = fs.readFileSync(privateKeyPath);
+  console.log('Private key content:', privateKeyContent.toString('utf8'));
+  console.log('PIN hash:', pinHash.toString('hex'));
+  const decryptedKey = decryptWithAES(privateKeyContent, pinHash);
+  fs.writeFileSync(tmpKeyPath, decryptedKey);
+
+  return tmpKeyPath;
 });
 
 ipcMain.handle('dialog:openFile', async (event, filtersv) => {
