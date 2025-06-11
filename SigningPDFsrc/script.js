@@ -1,7 +1,6 @@
 const { ipcRenderer } = require('electron');
 const fs = require("fs");
 const drivelist = require('drivelist');
-const { warn } = require('console');
 
 document.getElementById('action-select').addEventListener('change', changeMode);
 document.getElementById('choose-file-btn').addEventListener('click', chooseFile);
@@ -16,7 +15,7 @@ let filePath = undefined;
 
 
 checkForUSBDevices();
-setInterval(checkForUSBDevices, 5000);
+setInterval(checkForUSBDevices, 2500);
 async function checkForUSBDevices() {
   const drives = await drivelist.list();
   const usbDrives = drives.filter(drive => drive.busType === 'USB');
@@ -29,7 +28,13 @@ async function checkForUSBDevices() {
     pdhtml+="</option>";
   }
 
+  const oldValue = document.getElementById("pendrives").value;
   document.getElementById("pendrives").innerHTML = pdhtml; 
+  if(oldValue) {
+    try{
+      document.getElementById("pendrives").value = oldValue;
+    } catch (e) {}
+  }
   
   if (usbDrives.length > 0) {
     const mount = document.getElementById("pendrives").value;
@@ -99,8 +104,30 @@ async function chooseFile() {
 // }
 
 
+// crypto
+function decryptWithAES(encryptedData, aesKey) {
+    if (!aesKey || aesKey.length !== 32) { 
+        throw new Error('Invalid AES key. Expected a 256-bit key.');
+    }
+    const decipher = crypto.createDecipheriv('aes-256-ecb', aesKey, null);
+    decipher.setAutoPadding(true);
+    try {
+        const decrypted = Buffer.concat([decipher.update(encryptedData), decipher.final()]);
+        console.log('Decrypted data:', decrypted.toString('utf8')); // Debug: Logs the decrypted data as a string
+        return decrypted.toString('utf8'); // Return decrypted data as a UTF-8 string
+    } catch (error) {
+        console.error('Decryption error:', error);
+        throw error;
+    }
+}
 
-
+function hashPIN(pin) {
+    console.log('hashPIN called with:', pin);
+    if (!pin || typeof pin !== 'string') {
+        throw new Error('Invalid PIN. Expected a non-empty string.');
+    }
+    return crypto.createHash('sha256').update(pin, 'utf8').digest();
+}
 
 // new code
 
