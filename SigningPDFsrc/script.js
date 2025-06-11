@@ -1,73 +1,71 @@
 const { ipcRenderer } = require('electron');
 const fs = require("fs");
 const drivelist = require('drivelist');
-const { PDFDocument } = require('pdf-lib');
+const { warn } = require('console');
 
-
-document.getElementById('pin-form').addEventListener('click', pinEnter);
+document.getElementById('action-select').addEventListener('change', changeMode);
 document.getElementById('choose-file-btn').addEventListener('click', chooseFile);
+document.getElementById('choose-output-file-btn').addEventListener('click', chooseOutputFile);
+document.getElementById('choose-private-key-file-btn').addEventListener('click', choosePrivateKeyFile);
+document.getElementById('choose-public-key-file-btn').addEventListener('click', choosePublicKeyFile);
 document.getElementById('sign-btn').addEventListener('click', signPdf);
-setInterval(checkForUSBDevices, 5000);
+document.getElementById('verify-btn').addEventListener('click', verifyPdf);
 
 
-let privateKeyPath = undefined;
-let outputPath = undefined; 
 let filePath = undefined; 
 
 
+checkForUSBDevices();
+setInterval(checkForUSBDevices, 5000);
 async function checkForUSBDevices() {
-    const drives = await drivelist.list();
-    const usbDrives = drives.filter(drive => drive.busType === 'USB');
+  const drives = await drivelist.list();
+  const usbDrives = drives.filter(drive => drive.busType === 'USB');
 
-    let pdhtml = "";
-    for(let i=0;i<usbDrives.length;i++){
-      pdhtml+="<option>";
-      pdhtml+=usbDrives[i].mountpoints[0].path;
-      pdhtml+="</option>";
+  let pdhtml = "";
+  for(let i=0;i<usbDrives.length;i++){
+    pdhtml+="<option>";
+    pdhtml+=usbDrives[i].mountpoints[0].path;
+    pdhtml+="</option>";
+  }
+  document.getElementById("pendrives").innerHTML = pdhtml; 
+  
+  if (usbDrives.length > 0) {
+    document.getElementById("pendrives").removeAttribute("disabled");
+    console.log("Found USB drive:", usbDrives[0].mountpoints[0].path);
+
+    if ( document.getElementById("private-key-path").value === "" ) {
+      const privateKeyPath = usbDrives[0].mountpoints[0].path + ".prvt.pem";
+      document.getElementById("private-key-path").value = privateKeyPath;
     }
-    document.getElementById("pendrives").innerHTML = pdhtml; 
-    
-    if (usbDrives.length > 0) {
-      document.getElementById("pendrives").removeAttribute("disabled");
-      console.log("Znaleziono pendrive:", usbDrives[0].mountpoints[0].path);
-
-      privateKeyPath = usbDrives[0].mountpoints[0].path + "/rsa_private_key.pem";
-      outputPath = usbDrives[0].mountpoints[0].path + "/output.pdf";
-
-
-      
-      // if (fs.existsSync(privateKeyPath)) {
-      //     console.log("Znaleziono klucz prywatny, podpisuję PDF...");
-      //     // await signPdf("C:\\Users\\damia\\Downloads\\ENG_SCS_2025_project_v1.pdf", "./output.pdf", privateKeyPath, certPath);
-      // } else {
-      //     console.log("Nie znaleziono klucza na pendrive.");
-      // }
-
-    } else {
-        console.log("Brak pendrive'ów.");
-        return [];
+    if ( document.getElementById("public-key-path").value === "" ) {
+      const publicKeyPath = usbDrives[0].mountpoints[0].path + ".pub.pem";
+      document.getElementById("public-key-path").value = publicKeyPath;
     }
+
+  } else {
+    console.log("No USB drives found.");
+    return [];
+  }
 }
 
-
 async function chooseFile() {
-  const filePaths = await ipcRenderer.invoke('dialog:openFile');
+  const filePaths = await ipcRenderer.invoke('dialog:openFile', [{ name: 'PDF Files', extensions: ['pdf'] }]);
   const wrapper = document.getElementById('wrapper');
   wrapper.innerHTML = ' \
-  <section style="width: 20vw; overflow-y: auto; margin-left: 0;"> \
-    <canvas id="pdf-canvas"></canvas> \
-    <p id="file-path" style="word-wrap: break-word;"></p> \
-  </section>';
-
+  <div style="width: 20vw; overflow-y: auto; margin-left: 0; border: 1px solid rgba(255, 255, 255, 0.1); padding: 10px; border-radius: 10px;"> \
+  <canvas id="pdf-canvas"></canvas> \
+  <p id="file-path" style="word-wrap: break-word;"></p> \
+  </div>';
 
   if (filePaths.length > 0) {
-    document.getElementById('file-path').textContent = `Wybrany plik: ${filePaths[0]}`;
+    document.getElementById('file-path').textContent = `${filePaths[0]}`;
     loadPDF(filePaths[0]);
     filePath = filePaths[0];
   } else {
-    document.getElementById('file-path').textContent = 'Nie wybrano żadnego pliku';
+    document.getElementById('file-path').textContent = 'No file selected';
     wrapper.innerHTML = "";
   }
+
   async function loadPDF(filePath) {
     const loadingTask = pdfjsLib.getDocument(filePath);
     const pdf = await loadingTask.promise;
@@ -83,51 +81,137 @@ async function chooseFile() {
   }
 }
 
-
-async function pinEnter() {
-  const pin = document.getElementById('pin');
-  const pinv = pin.value;
+// async function pinEnter() {
+//   const pin = document.getElementById('pin');
+//   const pinv = pin.value;
   
-  alert(`PIN: ${pinv}`)
-  if (pinv === "1234") {
-    alert("PIN poprawny!");
-  } else {
-    console.log()
-    alert("Niepoprawny PIN.");
+//   alert(`PIN: ${pinv}`)
+//   if (pinv === "1234") {
+//   alert("PIN correct!");
+//   } else {
+//   console.log()
+//   alert("Incorrect PIN.");
+//   }
+// }
+
+
+
+
+
+// new code
+
+function isFileExisting(path) {
+  return fs.existsSync(path);
+}
+
+async function signPdf() {
+  const privateKeyPath = document.getElementById('private-key-path').value;
+  const outputFilePath = document.getElementById('output-file-path').value;
+  if(outputFilePath === undefined) {
+    alert("No output file selected!");
+    return;
+  }
+  if(privateKeyPath === "") {
+    alert("No private key file selected!");
+    return;
+  }
+  if (filePath === undefined) {
+    alert("No PDF file selected!"); 
+    return;
+  }
+  if (!isFileExisting(privateKeyPath)) {
+    alert("Private key file does not exist at the specified path!");
+    return;
+  }
+  if (!isFileExisting(filePath)) {
+    alert("PDF file does not exist at the specified path!");
+    return;
+  }
+  if (isFileExisting(outputFilePath)) {
+    const overwrite = confirm("Output file already exists. Do you want to overwrite it?");
+    if (!overwrite) {
+      return;
+    }
+  }
+  await ipcRenderer.invoke('sign', filePath, outputFilePath, privateKeyPath);
+  alert("PDF signed!");
+}
+
+async function verifyPdf() {
+  const publicKeyPath = document.getElementById('public-key-path').value;
+  if (filePath === undefined) {
+    alert("No PDF file selected for verification!");
+    return;
+  }
+  if (publicKeyPath === "") {
+    alert("No public key file selected for verification!");
+    return;
+  }
+  if (!isFileExisting(publicKeyPath)) {
+    alert("Public key file does not exist at the specified path!");
+    return;
+  }
+  if (!isFileExisting(filePath)) {
+    alert("PDF file does not exist at the specified path!");
+    return;
+  }
+  try {
+    let response = await ipcRenderer.invoke('verify', filePath, publicKeyPath);
+    alert(`Verification successful!`);
+  }
+  catch (error) {
+    alert("Verification failed!");
   }
 }
 
-
-// async function preparePdfForSigning(pdfPath, outputPath) {
-//   const existingPdfBytes = fs.readFileSync(pdfPath);
-//   const pdfDoc = await PDFDocument.load(existingPdfBytes);
-//   const pages = pdfDoc.getPages();
-//   const firstPage = pages[0];
-//   const pdfdoc = new pdfDoc();
-//   pdfdoc.addSignature({
-//       name: 'Signature1',
-//       reason: 'Document approval',
-//       page: 0, 
-//       x: 50,
-//       y: 50,
-//       width: 200,
-//       height: 50,
-//   });
-//   const pdfBytes = await pdfoc.save();
-//   fs.writeFileSync(outputPath, pdfBytes);
-  
-//   console.log("PDF przygotowany do podpisu!");
-// }
-
-async function signPdf() {
-  if(privateKeyPath === undefined || outputPath === undefined || filePath === undefined) {
-    alert("Nie znaleziono pendrive'a lub klucza prywatnego!");
-    return;
+async function chooseOutputFile() {
+  const filePath = await ipcRenderer.invoke('dialog:save-file');
+  if (filePath) {
+    const outputFilePath = filePath;
+    document.getElementById('output-file-path').value = outputFilePath;
+  } else {
+    document.getElementById('output-file-path').value = '';
   }
+}
 
+async function choosePrivateKeyFile() {
+  const filePath = await ipcRenderer.invoke('dialog:openFile', [{ name: 'Private Key Files', extensions: ['pem'] }]);
+  console.log("Private key file path:", filePath);
+  if (filePath) {
+    const privateKeyPath = filePath;
+    document.getElementById('private-key-path').value = privateKeyPath;
+  } else {
+    document.getElementById('private-key-path').value = '';
+  }
+}
 
+async function choosePublicKeyFile() {
+  const filePath = await ipcRenderer.invoke('dialog:openFile', [{ name: 'Public Key Files', extensions: ['pem'] }]);
+  console.log("Public key file path:", filePath);
+  if (filePath) {
+    const publicKeyPath = filePath;
+    document.getElementById('public-key-path').value = publicKeyPath;
+  } else {
+    document.getElementById('public-key-path').value = '';
+  }
+}
 
-  
-  fs.writeFileSync(outputPath, newPdfBytes);
-  console.log("PDF podpisany pomyślnie!");
+async function changeMode() {
+  const selectedValue = document.getElementById('action-select').value;
+  const signTab = document.getElementById('sign-tab');
+  const verifyTab = document.getElementById('verify-tab');
+
+  if (selectedValue === "sign") {
+    signTab.style.display = "block";
+    verifyTab.style.display = "none";
+  } else if (selectedValue === "verify") {
+    signTab.style.display = "none";
+    verifyTab.style.display = "block";
+  }
+}
+
+async function resetFocus() {
+  setTimeout(() => {
+    document.getElementById("my-input").focus();
+  }, 0);
 }
