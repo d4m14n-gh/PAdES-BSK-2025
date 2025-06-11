@@ -1,0 +1,25 @@
+{
+  "name": "signingpdfsrc",
+  "productName": "BSK 2025",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "electron": "^34.2.0",
+    "electron-builder": "^26.0.12"
+  },
+  "dependencies": {
+    "drivelist": "^12.0.2",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^4.8.69",
+    "usb": "^2.15.0",
+    "usb-detection": "^4.14.2"
+  }
+}

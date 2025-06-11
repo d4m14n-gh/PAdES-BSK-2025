@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
+  
+  <script defer type="module" src="node_modules/pdfjs-dist/build/pdf.min.mjs"></script>
+  <script defer type="module" src="node_modules/pdfjs-dist/build/pdf.worker.min.mjs"></script>
+  <script type="module" defer src="script.js"></script>
+</head>
+<body>
+  <header style="padding: 3vh;">
+    <h1 style="margin: 0;">PAdES-BSK-2025</h1>
+  </header>
+
+
+  <section>
+    <div class="centerRow" style="justify-content: space-between; align-items: start;">
+      <div style="flex-grow: 1; margin-right: 20px;">
+          <!-- <label>Choose file:</label> -->
+          <!-- <br> -->
+          <input type="button" id="choose-file-btn" value="Choose file"/> 
+        <hr>
+          <label for="action-select">Action:</label>
+          <br>
+          <select id="action-select" name="action-select">
+            <option value="sign">Sign</option>
+            <option value="verify">Verify</option>
+          </select>
+          <br>
+        <hr>
+          <label>Pendrives with keys:</label>
+          <br>
+          <select name="pendrives" id="pendrives" ></select>
+        
+
+        <div id="verify-tab" style="display: none;">
+            <h1>Verify PDF</h1>
+          <hr>
+            <label>Path of the public key:</label>
+            <br>
+            <input id="public-key-path" type="text"  value="">
+            <br>
+            <input type="button" id="choose-public-key-file-btn" value="Choose public key file"/>
+          <hr>
+            <input id="verify-btn" style="width: fit-content; padding: 10px 40px;" type="button" value="Verify pdf"/>
+        </div>
+
+        <div id="sign-tab">
+            <h1>Sign PDF</h1>
+          <hr>
+            <label>Path of the private key:</label>
+            <br>
+            <input id="private-key-path" type="text"  value="">
+            <br>
+            <input type="button" id="choose-private-key-file-btn" value="Choose private key file"/>
+          <hr>
+            <label>Enter a pin of the key:</label>
+            <br>
+            <input placeholder="xxxx" style="text-align: center;" type="password" id="pin" name="pin" minlength="4" maxlength="4" required>
+            <!-- <br> -->
+            <!-- <input id="pin-form" style="width: fit-content; padding: 10px 40px;" type="submit" value="Enter"/> -->
+          <hr>
+            <label>Choose output file:</label>
+            <br>
+            <input type="text" id="output-file-path" value="" />
+            <br>
+            <input type="button" id="choose-output-file-btn" value="Choose output file"/>
+            <br>
+          <hr>
+            <input id="sign-btn" style="width: fit-content; padding: 10px 40px;" type="button" value="Sign pdf"/>
+        </div>
+          
+      </div>
+      
+      <div id="wrapper"></div>
+    </div>
+  </section>
+
+  <div class="background"></div>
+</body>
+</html>
