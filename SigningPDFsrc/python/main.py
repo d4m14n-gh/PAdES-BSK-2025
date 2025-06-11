@@ -10,21 +10,6 @@ from typing import Optional
 import pypdf
 from pypdf.generic import DictionaryObject, NameObject, create_string_object
 
-from Crypto.Cipher import AES
-from Crypto.Util.Padding import unpad
-
-def decrypt_with_aes(encrypted_data: bytes, aes_key: bytes) -> str:
-    if not aes_key or len(aes_key) != 32:
-        raise ValueError('Invalid AES key. Expected a 256-bit key.')
-
-    try:
-        cipher = AES.new(aes_key, AES.MODE_ECB)
-        decrypted = unpad(cipher.decrypt(encrypted_data), AES.block_size)
-        print('Decrypted data:', decrypted.decode('utf-8'))  # Debug
-        return decrypted.decode('utf-8')
-    except Exception as e:
-        print('Decryption error:', e)
-        raise
 
 def create_pdf_placeholder(
     input_pdf_path: str, output_pdf_path: str, signature_length: int

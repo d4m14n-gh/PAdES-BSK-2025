@@ -90,47 +90,9 @@ async function chooseFile() {
   }
 }
 
-// async function pinEnter() {
-//   const pin = document.getElementById('pin');
-//   const pinv = pin.value;
-  
-//   alert(`PIN: ${pinv}`)
-//   if (pinv === "1234") {
-//   alert("PIN correct!");
-//   } else {
-//   console.log()
-//   alert("Incorrect PIN.");
-//   }
-// }
 
-
-// crypto
-function decryptWithAES(encryptedData, aesKey) {
-    if (!aesKey || aesKey.length !== 32) { 
-        throw new Error('Invalid AES key. Expected a 256-bit key.');
-    }
-    const decipher = crypto.createDecipheriv('aes-256-ecb', aesKey, null);
-    decipher.setAutoPadding(true);
-    try {
-        const decrypted = Buffer.concat([decipher.update(encryptedData), decipher.final()]);
-        console.log('Decrypted data:', decrypted.toString('utf8')); // Debug: Logs the decrypted data as a string
-        return decrypted.toString('utf8'); // Return decrypted data as a UTF-8 string
-    } catch (error) {
-        console.error('Decryption error:', error);
-        throw error;
-    }
-}
-
-function hashPIN(pin) {
-    console.log('hashPIN called with:', pin);
-    if (!pin || typeof pin !== 'string') {
-        throw new Error('Invalid PIN. Expected a non-empty string.');
-    }
-    return crypto.createHash('sha256').update(pin, 'utf8').digest();
-}
 
 // new code
-
 function isFileExisting(path) {
   return fs.existsSync(path);
 }
@@ -164,7 +126,21 @@ async function signPdf() {
       return;
     }
   }
-  await ipcRenderer.invoke('sign', filePath, outputFilePath, privateKeyPath);
+  const pin = document.getElementById('pin').value;
+  if (!pin || typeof pin !== 'string') {
+    alert("Invalid PIN input.");
+    return;
+  }
+  let tmpDecryptedKeyPath;
+  try {
+    tmpDecryptedKeyPath = await ipcRenderer.invoke('decrypt-private-key', privateKeyPath, pin);
+  }
+  catch (error) {
+    alert("Failed to decrypt private key. Please check your PIN and try again.");
+    return;
+  }
+  await ipcRenderer.invoke('sign', filePath, outputFilePath, tmpDecryptedKeyPath);
+  fs.unlinkSync(tmpDecryptedKeyPath);
   alert("PDF signed!");
 }
 
